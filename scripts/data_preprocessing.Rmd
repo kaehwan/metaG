@@ -1,0 +1,63 @@
+---
+title: "data_preprocessing"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source("configuration.R")
+```
+
+#### preprocessing natural real-world samples' metaphlan data
+
+```{r}
+# Preprocess: Species-level
+meta <- read.table('../metadata/metagenomics_control_metadata.txt', 
+                   header=TRUE, row.names=4, sep="\t")
+dat.s <- read.table('../tables/metagenomics.metaphlan4.control.all.s', header=TRUE, row.names=1)
+colnames(dat.s) <- sub("_metagenome", "", colnames(dat.s))
+dat.s[dat.s < 0.1] <- 0
+dat.s.fil <- dat.s[rowSums(dat.s)>0, ]
+
+dat.s.fil <- apply(dat.s.fil, 2, function(x) x/sum(x)) * 100
+write.table(dat.s.fil, '../output_tables/metagenomics.metaphlan4.control.filtered.s', 
+            sep='\t', row.names=TRUE, col.names=NA, quote=F)
+
+# Preprocess: Genus level
+dat.g <- read.table('../tables/metagenomics.metaphlan4.control.all.g', header=TRUE, row.names=1)
+colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
+dat.g[dat.g < 0.1] <- 0
+dat.g.fil <- dat.g[rowSums(dat.g)>0, ]
+
+dat.g.fil <- apply(dat.g.fil, 2, function(x) x/sum(x)) * 100
+write.table(dat.g.fil, '../output_tables/metagenomics.metaphlan4.control.filtered.g', 
+            sep='\t', row.names=TRUE, col.names=NA, quote=F)
+
+```
+
+#### preprocessing artificial spike-in samples' metaphlan data
+
+```{r}
+# Preprocess: Species level
+meta.spike <- read.table('../metadata/metagenomics_spike_metadata.txt', header=TRUE, 
+                         row.names=4, sep="\t")
+dat.spike <- read.table('../tables/metagenomics.metaphlan4.spike.s', header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4))
+colnames(dat.spike) <- sub("_metagenome", "", colnames(dat.spike))
+dat.spike[dat.spike < 0.1] <- 0
+dat.spike.fil <- dat.spike[rowSums(dat.spike)>0, ]
+
+dat.spike.fil <- apply(dat.spike.fil, 2, function(x) x/sum(x)) * 100
+write.table(dat.spike.fil, '../output_tables/metagenomics.metaphlan4.spike.filtered.s', 
+            sep='\t', row.names = TRUE, col.names = NA, quote=F)
+```
+

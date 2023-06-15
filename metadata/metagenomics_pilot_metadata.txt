@@ -1,0 +1,10 @@
+Month	Year	Sample_ID	Library	Category	Sample_type	Storage_conditions	Market_type	GBS_detected	Enrichment	Spike_in
+Aug	2021	1657	M0001	Fish	Snakehead	Frozen	Supermarket	Negative	Pre	2Log
+Aug	2021	1657	M0002	Fish	Snakehead	Frozen	Supermarket	Positive	eTHB	2Log
+Aug	2021	1657	M0003	Fish	Snakehead	Frozen	Supermarket	Positive	eBHI	2Log
+Sep	2021	1692	M0004	Fish	Tilapia	Frozen	Supermarket	Positive	eTHB	natural
+Aug	2021	1657	M0005	Fish	Snakehead	Frozen	Supermarket	Positive	eTHB	3Log
+Aug	2021	1657	M0006	Fish	Snakehead	Frozen	Supermarket	Positive	eBHI	3Log
+Sep	2021	1692	M0007	Fish	Tilapia	Frozen	Supermarket	Negative	Pre	natural
+Sep	2021	1692	M0008	Fish	Tilapia	Frozen	Supermarket	Positive	eBHI	natural
+Sep	2021	1692	M0009	Fish	Tilapia	Frozen	Supermarket	Positive	chromID	natural

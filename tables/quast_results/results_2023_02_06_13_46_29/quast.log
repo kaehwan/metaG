@@ -1,0 +1,206 @@
+/Users/simkaehwan/miniconda3/envs/quast/bin/quast.py M0004.scaffolds.fasta M0024.spades.step.fasta M0025.spades.step.fasta M0026.spades.step.fasta M0027.final_assembly.fasta M0028.final_assembly.fasta M0029.final_assembly.fasta M0030.final_assembly.fasta M0045.spades.step.fasta M0046.spades.step.fasta M0047.spades.step.fasta M0048.spades.step.fasta M0049.spades.step.fasta M0050.spades.step.fasta M0051.spades.step.fasta M0052.spades.step.fasta M0053.spades.step.fasta M0084.spades.step.fasta M0085.spades.step.fasta M0086.spades.step.fasta M0087.spades.step.fasta
+
+Version: 5.0.2
+
+System information:
+  OS: Darwin-17.7.0-x86_64-i386-64bit (macosx)
+  Python version: 3.7.12
+  CPUs number: 8
+
+Started: 2023-02-06 13:46:29
+
+Logging to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/quast.log
+NOTICE: Maximum number of threads is set to 2 (use --threads option to set it manually)
+
+CWD: /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl
+Main parameters: 
+  MODE: default, threads: 2, minimum contig length: 500, minimum alignment length: 65, \
+  ambiguity: one, threshold for extensive misassembly size: 1000
+
+Contigs:
+  Pre-processing...
+  1  M0004.scaffolds.fasta ==> M0004.scaffolds
+  2  M0024.spades.step.fasta ==> M0024.spades.step
+  3  M0025.spades.step.fasta ==> M0025.spades.step
+  4  M0026.spades.step.fasta ==> M0026.spades.step
+  5  M0027.final_assembly.fasta ==> M0027.final_assembly
+  6  M0028.final_assembly.fasta ==> M0028.final_assembly
+  7  M0029.final_assembly.fasta ==> M0029.final_assembly
+  8  M0030.final_assembly.fasta ==> M0030.final_assembly
+  9  M0045.spades.step.fasta ==> M0045.spades.step
+  10 M0046.spades.step.fasta ==> M0046.spades.step
+  11 M0047.spades.step.fasta ==> M0047.spades.step
+  12 M0048.spades.step.fasta ==> M0048.spades.step
+  13 M0049.spades.step.fasta ==> M0049.spades.step
+  14 M0050.spades.step.fasta ==> M0050.spades.step
+  15 M0051.spades.step.fasta ==> M0051.spades.step
+  16 M0052.spades.step.fasta ==> M0052.spades.step
+  17 M0053.spades.step.fasta ==> M0053.spades.step
+  18 M0084.spades.step.fasta ==> M0084.spades.step
+  19 M0085.spades.step.fasta ==> M0085.spades.step
+  20 M0086.spades.step.fasta ==> M0086.spades.step
+  21 M0087.spades.step.fasta ==> M0087.spades.step
+
+2023-02-06 13:46:32
+Running Basic statistics processor...
+  Contig files: 
+    1  M0004.scaffolds
+    2  M0024.spades.step
+    3  M0025.spades.step
+    4  M0026.spades.step
+    5  M0027.final_assembly
+    6  M0028.final_assembly
+    7  M0029.final_assembly
+    8  M0030.final_assembly
+    9  M0045.spades.step
+    10 M0046.spades.step
+    11 M0047.spades.step
+    12 M0048.spades.step
+    13 M0049.spades.step
+    14 M0050.spades.step
+    15 M0051.spades.step
+    16 M0052.spades.step
+    17 M0053.spades.step
+    18 M0084.spades.step
+    19 M0085.spades.step
+    20 M0086.spades.step
+    21 M0087.spades.step
+  Calculating N50 and L50...
+    1  M0004.scaffolds, N50 = 229348, L50 = 3, Total length = 2099407, GC % = 35.27, # N's per 100 kbp =  9.19
+    2  M0024.spades.step, N50 = 12165, L50 = 2, Total length = 57723, GC % = 39.29, # N's per 100 kbp =  126.47
+    3  M0025.spades.step, N50 = 2760, L50 = 27, Total length = 288519, GC % = 39.18, # N's per 100 kbp =  283.86
+    4  M0026.spades.step, N50 = 2234, L50 = 18, Total length = 146129, GC % = 38.07, # N's per 100 kbp =  62.96
+    5  M0027.final_assembly, N50 = 63564, L50 = 12, Total length = 2181248, GC % = 35.58, # N's per 100 kbp =  20.63
+    6  M0028.final_assembly, N50 = 81942, L50 = 7, Total length = 2103086, GC % = 35.34, # N's per 100 kbp =  15.36
+    7  M0029.final_assembly, N50 = 40952, L50 = 15, Total length = 2019628, GC % = 35.42, # N's per 100 kbp =  971.27
+    8  M0030.final_assembly, N50 = 2372, L50 = 194, Total length = 1449255, GC % = 35.72, # N's per 100 kbp =  82.04
+    9  M0045.spades.step, N50 = 229388, L50 = 3, Total length = 2083749, GC % = 35.25, # N's per 100 kbp =  2.88
+    10 M0046.spades.step, N50 = 229388, L50 = 3, Total length = 2080341, GC % = 35.26, # N's per 100 kbp =  0.48
+    11 M0047.spades.step, N50 = 11968, L50 = 2, Total length = 48488, GC % = 38.79, # N's per 100 kbp =  0.00
+    12 M0048.spades.step, N50 = 4793, L50 = 17, Total length = 313494, GC % = 38.61, # N's per 100 kbp =  62.84
+    13 M0049.spades.step, N50 = 1916, L50 = 15, Total length = 116507, GC % = 40.30, # N's per 100 kbp =  290.97
+    14 M0050.spades.step, N50 = 2401, L50 = 19, Total length = 154996, GC % = 39.39, # N's per 100 kbp =  58.71
+    15 M0051.spades.step, N50 = 2162, L50 = 13, Total length = 105952, GC % = 40.12, # N's per 100 kbp =  235.96
+    16 M0052.spades.step, N50 = 1998, L50 = 17, Total length = 142984, GC % = 38.58, # N's per 100 kbp =  6.99
+    17 M0053.spades.step, N50 = 2821, L50 = 8, Total length = 89631, GC % = 39.20, # N's per 100 kbp =  61.36
+    18 M0084.spades.step, N50 = 4432, L50 = 6, Total length = 85119, GC % = 39.53, # N's per 100 kbp =  34.07
+    19 M0085.spades.step, N50 = 2153, L50 = 20, Total length = 168939, GC % = 39.56, # N's per 100 kbp =  174.62
+    20 M0086.spades.step, N50 = 126789, L50 = 5, Total length = 2276113, GC % = 35.56, # N's per 100 kbp =  12.52
+    21 M0087.spades.step, N50 = 101194, L50 = 7, Total length = 2138549, GC % = 35.44, # N's per 100 kbp =  12.95
+  Drawing Nx plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/Nx_plot.pdf
+  Drawing cumulative plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/cumulative_plot.pdf
+  Drawing GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/GC_content_plot.pdf
+  Drawing M0004.scaffolds GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0004.scaffolds_GC_content_plot.pdf
+  Drawing M0024.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0024.spades.step_GC_content_plot.pdf
+  Drawing M0025.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0025.spades.step_GC_content_plot.pdf
+  Drawing M0026.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0026.spades.step_GC_content_plot.pdf
+  Drawing M0027.final_assembly GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0027.final_assembly_GC_content_plot.pdf
+  Drawing M0028.final_assembly GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0028.final_assembly_GC_content_plot.pdf
+  Drawing M0029.final_assembly GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0029.final_assembly_GC_content_plot.pdf
+  Drawing M0030.final_assembly GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0030.final_assembly_GC_content_plot.pdf
+  Drawing M0045.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0045.spades.step_GC_content_plot.pdf
+  Drawing M0046.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0046.spades.step_GC_content_plot.pdf
+  Drawing M0047.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0047.spades.step_GC_content_plot.pdf
+  Drawing M0048.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0048.spades.step_GC_content_plot.pdf
+  Drawing M0049.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0049.spades.step_GC_content_plot.pdf
+  Drawing M0050.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0050.spades.step_GC_content_plot.pdf
+  Drawing M0051.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0051.spades.step_GC_content_plot.pdf
+  Drawing M0052.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0052.spades.step_GC_content_plot.pdf
+  Drawing M0053.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0053.spades.step_GC_content_plot.pdf
+  Drawing M0084.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0084.spades.step_GC_content_plot.pdf
+  Drawing M0085.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0085.spades.step_GC_content_plot.pdf
+  Drawing M0086.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0086.spades.step_GC_content_plot.pdf
+  Drawing M0087.spades.step GC content plot...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0087.spades.step_GC_content_plot.pdf
+  Drawing Coverage histogram (bin size: 1x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/coverage_histogram.pdf
+  Drawing M0004.scaffolds coverage histogram (bin size: 4x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0004-scaffolds_coverage_histogram.pdf
+  Drawing M0024.spades.step coverage histogram (bin size: 7x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0024-spades-step_coverage_histogram.pdf
+  Drawing M0025.spades.step coverage histogram (bin size: 11x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0025-spades-step_coverage_histogram.pdf
+  Drawing M0026.spades.step coverage histogram (bin size: 1x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0026-spades-step_coverage_histogram.pdf
+  Drawing M0027.final_assembly coverage histogram (bin size: 1x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0027-final_assembly_coverage_histogram.pdf
+  Drawing M0028.final_assembly coverage histogram (bin size: 1x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0028-final_assembly_coverage_histogram.pdf
+  Drawing M0029.final_assembly coverage histogram (bin size: 3x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0029-final_assembly_coverage_histogram.pdf
+  Drawing M0030.final_assembly coverage histogram (bin size: 1x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0030-final_assembly_coverage_histogram.pdf
+  Drawing M0045.spades.step coverage histogram (bin size: 34x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0045-spades-step_coverage_histogram.pdf
+  Drawing M0046.spades.step coverage histogram (bin size: 10x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0046-spades-step_coverage_histogram.pdf
+  Drawing M0047.spades.step coverage histogram (bin size: 2x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0047-spades-step_coverage_histogram.pdf
+  Drawing M0048.spades.step coverage histogram (bin size: 3x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0048-spades-step_coverage_histogram.pdf
+  Drawing M0049.spades.step coverage histogram (bin size: 16x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0049-spades-step_coverage_histogram.pdf
+  Drawing M0050.spades.step coverage histogram (bin size: 2x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0050-spades-step_coverage_histogram.pdf
+  Drawing M0051.spades.step coverage histogram (bin size: 13x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0051-spades-step_coverage_histogram.pdf
+  Drawing M0052.spades.step coverage histogram (bin size: 4x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0052-spades-step_coverage_histogram.pdf
+  Drawing M0053.spades.step coverage histogram (bin size: 2x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0053-spades-step_coverage_histogram.pdf
+  Drawing M0084.spades.step coverage histogram (bin size: 3x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0084-spades-step_coverage_histogram.pdf
+  Drawing M0085.spades.step coverage histogram (bin size: 5x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0085-spades-step_coverage_histogram.pdf
+  Drawing M0086.spades.step coverage histogram (bin size: 9x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0086-spades-step_coverage_histogram.pdf
+  Drawing M0087.spades.step coverage histogram (bin size: 18x)...
+    saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/basic_stats/M0087-spades-step_coverage_histogram.pdf
+Done.
+
+NOTICE: Genes are not predicted by default. Use --gene-finding or --glimmer option to enable it.
+
+2023-02-06 13:46:54
+Creating large visual summaries...
+This may take a while: press Ctrl-C to skip this step..
+  1 of 2: Creating Icarus viewers...
+  2 of 2: Creating PDF with all tables and plots...
+Done
+
+2023-02-06 13:47:05
+RESULTS:
+  Text versions of total report are saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/report.txt, report.tsv, and report.tex
+  Text versions of transposed total report are saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/transposed_report.txt, transposed_report.tsv, and transposed_report.tex
+  HTML version (interactive tables and plots) is saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/report.html
+  PDF version (tables and plots) is saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/report.pdf
+  Icarus (contig browser) is saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/icarus.html
+  Log is saved to /Users/simkaehwan/Documents/Bioinfo/meta_results/assemblies_ctrl/quast_results/results_2023_02_06_13_46_29/quast.log
+
+Finished: 2023-02-06 13:47:05
+Elapsed time: 0:00:36.427755
+NOTICEs: 2; WARNINGs: 0; non-fatal ERRORs: 0
+
+Thank you for using QUAST!

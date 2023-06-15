@@ -1,0 +1,22 @@
+Month	Year	Sample_ID	Library	Category	Sample_type	Storage_conditions	Market_type	GBS_isolated	GBS_detected	GBS_seqTyped
+April	2022	1841	M0024	Fish	Snakehead	Chilled	Supermarket	No	No	No
+April	2022	1843	M0025	Fish	Tilapia	On ice	Supermarket	No	No	No
+April	2022	1845	M0026	Fish	Asian bighead carp	On ice	Supermarket	No	No	No
+August	2022	1924	M0084	Fish	Tilapia	On ice	Supermarket	No	No	No
+August	2022	1925	M0047	Fish	Snakehead	Chilled	Supermarket	No	No	No
+August	2022	1926	M0048	Fish	Snakehead	Frozen	Supermarket	No	No	No
+August	2022	1927	M0049	Fish	Tilapia	On ice	Supermarket	No	No	No
+August	2022	1928	M0050	Fish	Asian bighead carp	On ice	Supermarket	No	No	No
+August	2022	1929	M0051	Fish	Tilapia	Live	Supermarket	No	No	No
+August	2022	1930	M0052	Fish	Tilapia	On ice	Wet market	No	No	No
+August	2022	1931	M0053	Fish	Snakehead	On ice	Wet market	No	No	No
+August	2022	1932	M0085	Fish	Snakehead	On ice	Wet market	No	No	No
+September	2021	1692	M0004	Fish	Tilapia	Frozen	Supermarket	Yes	Yes	Yes
+June	2022	1877	M0027	Fish	Snakehead	Frozen	Supermarket	Yes	Yes	Yes
+June	2022	1882	M0028	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes
+June	2022	1883	M0029	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes
+June	2022	1884	M0030	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	No
+July	2022	1897	M0045	Fish	Tilapia	Live	Supermarket	Yes	Yes	Yes
+July	2022	1905	M0046	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes
+October	2022	1945	M0086	Fish	Asian bighead carp	On ice	Supermarket	Yes	Yes	Yes
+November	2022	1953	M0087	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes

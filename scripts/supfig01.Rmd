@@ -1,0 +1,126 @@
+---
+title: "supfig01"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source("configuration.R")
+library(vegan)
+library(ggtext)
+library(ComplexHeatmap)
+```
+
+#### Principal composition analysis for natural samples
+
+```{r}
+### Preprocess data - Genus level ###
+meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
+                   header=TRUE, row.names=4, sep="\t")
+dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.g", 
+                  header=TRUE, row.names=1)
+dat[dat < 0.1] <- 0
+dat <- dat[rowSums(dat)>0, ]
+### MDS ###
+dist.mat <- vegdist(t(dat))
+cmds <- cmdscale(dist.mat, k=2, eig=TRUE)
+eigen <- cmds$eig / sum(cmds$eig) * 100
+dat.merged <- merge(cmds$points, meta, by.x=0, by.y=0, all.x=TRUE) %>% 
+        mutate(GBS_detected=str_replace_all(GBS_detected, "Yes", "GBS detected")) %>% 
+        mutate(GBS_detected=str_replace_all(GBS_detected, "No", "GBS not detected"))
+dat.merged$GBS_detected <- fct_relevel(factor(dat.merged$GBS_detected), "GBS detected")
+### PCoA ###
+p.pcoa.g <- dat.merged %>% 
+        rename(`Metagenomics<br>detection`=GBS_detected) %>% 
+        ggplot(., aes(x=V1, y=V2, col=`Metagenomics<br>detection`, 
+                      fill=`Metagenomics<br>detection`, shape=`Metagenomics<br>detection`), lwd=2) +
+        geom_density_2d(aes(x=V1, y=V2), inherit.aes=FALSE, col='grey', lwd=1) +
+        geom_point(size=5) +
+        labs(x=paste0('MDS1 (', round(eigen[1], 1), '%)'),
+             y=paste0('MDS2 (', round(eigen[2], 1), '%)')) +
+        scale_color_manual(name="Metagenomics<br>workflow",
+                           values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
+        scale_fill_manual(name="Metagenomics<br>workflow",
+                          values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
+        scale_shape_manual(name="Metagenomics<br>workflow", values=c(19,23)) +
+        guides(color=guide_legend(override.aes=list(size=5)),) +
+        theme(legend.title=element_markdown(size=20))
+p.pcoa.g
+ggsave('../output_figures/supfig01_a_illumina_control_taxo_genus_pcoa.svg', width =12, height = 8)
+
+
+# 
+# ### Preprocess data - Species level ###
+# meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
+#                    header=TRUE, row.names=4, sep="\t")
+# dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s", 
+#                   header=TRUE, row.names=1)
+# dat[dat < 0.1] <- 0
+# dat <- dat[rowSums(dat)>0, ]
+# ### MDS ###
+# dist.mat <- vegdist(t(dat))
+# cmds <- cmdscale(dist.mat, k=2, eig=TRUE)
+# eigen <- cmds$eig / sum(cmds$eig) * 100
+# dat.merged <- merge(cmds$points, meta, by.x=0, by.y=0, all.x=TRUE)
+# dat.merged$GBS_detected <- fct_relevel(factor(dat.merged$GBS_detected), 'Yes')
+# ### PCoA ###
+# p.pcoa.s <- dat.merged %>% 
+#         rename(`Metagenomics<br>detection`=GBS_detected) %>% 
+#         ggplot(., aes(x=V1, y=V2, col=`Metagenomics<br>detection`, fill=`Metagenomics<br>detection`, shape=`Metagenomics<br>detection`), lwd=2) +
+#         geom_density_2d(aes(x=V1, y=V2), inherit.aes=FALSE, col='grey', lwd=1) +
+#         geom_point(size=4.5) +
+#         labs(x=paste0('MDS1 (', round(eigen[1], 1), '%)'),
+#              y=paste0('MDS2 (', round(eigen[2], 1), '%)')) +
+#         scale_color_manual(values=c(pal_npg(c("nrc"))(10)[c(1,3,7,2,5,10,4)], 'grey')) +
+#         scale_fill_manual(values=c(pal_npg(c("nrc"))(10)[c(1,3,7,2,5,10,4)], 'grey')) +
+#         scale_shape_manual(values=c(19,23)) +
+#         theme(legend.title=element_markdown(size=20))
+# p.pcoa.s
+
+```
+
+#### Hierarchical clustering for natural samples
+
+```{r}
+### Species level ###
+# Load metadata
+meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
+                   header=TRUE, row.names=4, sep="\t")
+# Load pre-processed metaphlan4 relative abundance
+dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s",
+                  header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4)) # round to 4 digits
+# remove GBS from result
+species_to_remove <- "s__Streptococcus_agalactiae"
+dat <- dat[!(row.names(dat) %in% species_to_remove), ]
+# filter out extremely low abundance sample
+dat[dat < 0.1000] <- 0
+dat <- dat[rowSums(dat)>0, ]
+# re-adjust relative abundance to 100 %
+dat <- apply(dat, 2, function(x) x/sum(x)) * 100
+# set upper limit of rel. abund. to 20 %
+dat[dat > 20] <- 20
+
+meta.t <- t(meta) %>% data.frame()
+dat <- rbind(meta.t, dat)
+row_to_remove <- c("Month", "Year", "Market_type", "Sample_ID", "Category", "Sample_type",
+                   "Storage_conditions", "GBS_detected", "GBS_seqTyped")
+dat <- dat[!row.names(dat) %in% row_to_remove,]
+row.names(dat) <- gsub("s__", "", row.names(dat))
+row.names(dat) <- gsub("_", " ", row.names(dat))
+write.table(dat, '../output_tables/metagenomics.metaphlan4.control.filtered.s.renamed2', 
+            sep='\t', row.names = TRUE, col.names = NA, quote=F)
+
+#run the following command in bash
+#./scripts/run_hclust2.sh
+```
+

@@ -1,0 +1,24 @@
+﻿Experiment,Bin Id,Marker lineage,# genomes,# markers,# marker sets,0,1,2,3,4,5+,Completeness,Contamination,Strain heterogeneity,COMPLETENESS_y,CONTAMINATION_y,QUAL_y
+pilot,M0004,Streptococcus agalactiae (6),20,807,204,4,797,6,0,0,0,99.41,0.19,66.67,NEAR,LOW,HIGH
+ctrl,M0022,Streptococcus agalactiae (6),20,807,204,754,9,23,4,12,5,2.37,3.14,87.26,PARTIAL,LOW,INCOMPLETE
+ctrl,M0023,Streptococcus agalactiae (6),20,807,204,770,34,3,0,0,0,2.66,0.42,0,PARTIAL,LOW,INCOMPLETE
+ctrl,M0024,Streptococcus agalactiae (6),20,807,204,807,0,0,0,0,0,0,0,0,PARTIAL,LOW,INCOMPLETE
+ctrl,M0025,Streptococcus agalactiae (6),20,807,204,752,9,26,19,1,0,2.19,2.44,88.76,PARTIAL,LOW,INCOMPLETE
+ctrl,M0026,Streptococcus agalactiae (6),20,807,204,764,30,11,2,0,0,1.79,0.86,82.35,PARTIAL,LOW,INCOMPLETE
+ctrl2,M0027,Streptococcus agalactiae (6),20,807,204,5,755,47,0,0,0,99.04,2.2,91.49,NEAR,LOW,HIGH
+ctrl2,M0028,Streptococcus agalactiae (6),20,807,204,2,802,3,0,0,0,99.78,0.37,0,NEAR,LOW,HIGH
+ctrl2,M0029,Streptococcus agalactiae (6),20,807,204,99,673,34,1,0,0,89.14,2.49,91.89,SUBSTANTIAL,LOW,MODERATE
+ctrl2,M0030,Streptococcus agalactiae (6),20,807,204,217,577,13,0,0,0,66.56,1.01,61.54,MODERATE,LOW,LOW
+ctrl3,M0045,Streptococcus agalactiae (6),20,807,204,4,799,4,0,0,0,99.41,0.62,50,NEAR,LOW,HIGH
+ctrl3,M0046,Streptococcus agalactiae (6),20,807,204,4,797,6,0,0,0,99.41,0.19,66.67,NEAR,LOW,HIGH
+ctrl3,M0047,Streptococcus agalactiae (6),20,807,204,807,0,0,0,0,0,0,0,0,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0048,Streptococcus agalactiae (6),20,807,204,755,31,20,1,0,0,2.31,1.29,86.96,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0049,Streptococcus agalactiae (6),20,807,204,761,38,8,0,0,0,1.87,0.5,75,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0050,Streptococcus agalactiae (6),20,807,204,761,19,27,0,0,0,1.93,1.04,96.3,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0051,Streptococcus agalactiae (6),20,807,204,757,49,1,0,0,0,2.08,0.1,0,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0052,Streptococcus agalactiae (6),20,807,204,747,36,24,0,0,0,3.27,0.71,95.83,PARTIAL,LOW,INCOMPLETE
+ctrl3,M0053,Streptococcus agalactiae (6),20,807,204,785,22,0,0,0,0,0.67,0,0,PARTIAL,LOW,INCOMPLETE
+ctrl4,M0084,Streptococcus agalactiae (6),20,807,204,784,23,0,0,0,0,0.85,0,0,PARTIAL,LOW,INCOMPLETE
+ctrl4,M0085,Streptococcus agalactiae (6),20,807,204,749,16,41,1,0,0,2.9,1.35,88.64,PARTIAL,LOW,INCOMPLETE
+ctrl4,M0086,Streptococcus agalactiae (6),20,807,204,4,753,12,33,5,0,99.41,3.47,92.2,NEAR,LOW,HIGH
+ctrl4,M0087,Streptococcus agalactiae (6),20,807,204,2,803,2,0,0,0,99.78,0.13,0,NEAR,LOW,HIGH

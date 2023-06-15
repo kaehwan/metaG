@@ -1,0 +1,201 @@
+---
+title: "fig02"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source('configuration.R')
+library(vegan)
+library(ggrepel)
+library(ggtext)
+library(RColorBrewer)
+library(wesanderson)
+pacman::p_load(svglite)
+```
+
+#### Alpha diversity analysis
+
+```{r}
+
+# Read in metadata & genus metaphlan abundance
+meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=TRUE, row.names=4) %>% 
+        mutate(Library=row.names(.))
+dat.g <- read.table("../tables/metagenomics.metaphlan4.pilot.g", header=TRUE, row.names=1)
+# Preprocess metadata
+sample_to_analyse <- c("M0007", "M0004", "M0008", "M0009")
+meta.fil <- meta[row.names(meta) %in% sample_to_analyse, ] %>% 
+        mutate(Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID")))
+# Preprocess data
+colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
+row.names(dat.g) <- gsub("g__", "", row.names(dat.g))
+dat.g.fil <- dat.g %>% select(sample_to_analyse)
+dat.g.fil[dat.g.fil < 0.1] <- 0
+dat.g.fil <- dat.g.fil[rowSums(dat.g.fil)>0, ] %>% 
+        apply(., 2, function(x) x/sum(x))*100
+
+Shan <- data.frame(Shannon=(diversity(t(dat.g.fil),index="shannon"))) %>% 
+        rownames_to_column('Library')
+Simp <- data.frame(Simpson=diversity(t(dat.g.fil),index="simpson")) %>%
+        rownames_to_column('Library')
+diversity.g <- group_by(meta.fil, Library) %>% merge(Shan, by ="Library") %>% 
+        merge(Simp, by="Library") %>% 
+        select(Library, Shannon, Simpson)
+
+diversity.g$Library <- str_replace(diversity.g$Library, "M0007", "Pre")
+diversity.g$Library <- str_replace(diversity.g$Library, "M0004", "eTHB")
+diversity.g$Library <- str_replace(diversity.g$Library, "M0008", "eBHI")
+diversity.g$Library <- str_replace(diversity.g$Library, "M0009", "chromID")
+
+diversity.g <- diversity.g %>% 
+        mutate(Library=factor(Library, levels=c("Pre", "eTHB", "eBHI", "chromID"))) %>% 
+        melt(., id.vars="Library", variable.name="Diversity", value.name="Value")
+
+diversity.g.plot <- diversity.g %>% 
+        ggplot(aes(x=Diversity, y=Value, fill=Library)) + 
+        geom_bar(stat="identity", position="dodge") +
+        scale_y_continuous(limits=c(0,1.9)) +
+        scale_fill_manual(values=wes_palette(n=4, name="GrandBudapest1")) +
+        coord_flip() +
+        labs(x="", y="Diversity", fill=NULL) +
+        theme(legend.position=c(0.9,0.87), legend.text=element_markdown(), axis.text.y=element_text(angle=90, hjust=0.5))
+diversity.g.plot
+ggsave('../output_figures/fig02_a_illumina_pilot_metagenomic_genus_alpha.svg', 
+       width=10, height=8)
+
+```
+
+#### Taxonomic profiling of four enrichment fractions (genus-level)
+
+```{r}
+
+df.g <- dat.g.fil %>% 
+        t() %>% 
+        as.data.frame() %>% 
+        rownames_to_column("fraction") %>% 
+        pivot_longer(-fraction, names_to="taxon", values_to="percentage") %>% 
+        mutate(taxon=str_replace(taxon, "^(\\S*)$", "*\\1*")) 
+
+taxon_pool.g <- df.g %>% 
+        group_by(taxon) %>% 
+        summarise(pool=max(percentage)<4, .groups="drop")
+
+inner_join(df.g, taxon_pool.g, by="taxon") %>% 
+        mutate(taxon=if_else(pool, "Other", taxon)) %>% 
+        group_by(fraction, taxon) %>% 
+        summarise(percentage=sum(percentage), .groups="drop") %>% 
+        mutate(fraction=str_replace(fraction, "M0007", "Pre")) %>% 
+        mutate(fraction=str_replace(fraction, "M0004", "eTHB")) %>% 
+        mutate(fraction=str_replace(fraction, "M0008", "eBHI")) %>% 
+        mutate(fraction=str_replace(fraction, "M0009", "chromID")) %>% 
+        mutate(fraction=factor(fraction, levels=c("Pre", "eTHB", "eBHI", "chromID"))) %>% 
+        ggplot(aes(x=fraction, y=percentage, fill=taxon)) +
+        geom_col() +
+        scale_fill_manual(name="Genus", values=c(brewer.pal(8, "Dark2"), "darkred", "grey")) +
+        theme(legend.text=element_markdown()) +
+        labs(x="Enrichment fraction", y="Relative abundance (%)")
+ggsave('../output_figures/fig02_b_illumina_pilot_taxo_relabund_genus.svg', 
+       width=10, height=8)
+
+```
+
+#### Relative abundance of selected species in four enrichment fractions
+
+```{r}
+# Read in metadata & species-level metaphlan abundance
+meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=true, row.names=4) %>% 
+        mutate(Library=row.names(.))
+dat.s <- read.table("../tables/metagenomics.metaphlan4.pilot.s", header=true, row.names=1) 
+# Preprocess metadata
+sample_to_analyse <- c("M0007", "M0004", "M0008", "M0009")
+meta.fil <- meta[row.names(meta) %in% sample_to_analyse, ] %>% 
+        mutate(Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID")))
+# Preprocess data
+colnames(dat.s) <- sub("_metagenome", "", colnames(dat.s))
+row.names(dat.s) <- gsub("s__", "", row.names(dat.s)) %>% gsub("_", " ", .)
+dat.s.fil <- dat.s %>% select(sample_to_analyse)
+dat.s.fil[dat.s.fil < 0.1] <- 0
+dat.s.fil <- dat.s.fil[rowSums(dat.s.fil)>0, ] %>% 
+        apply(., 2, function(x) x/sum(x))*100
+
+df.s <- dat.s.fil %>% 
+        t() %>% 
+        as.data.frame() %>% 
+        rownames_to_column("fraction") %>% 
+        pivot_longer(-fraction, names_to="taxon", values_to="percentage") %>% 
+        mutate(taxon=str_replace(taxon, "^(\\S* \\S*)$", "*\\1*"))
+taxon_pool.s <- df.s %>% 
+        group_by(taxon) %>% 
+        summarise(pool=max(percentage)<5, .groups="drop")
+
+# Selected species: L. lactis, E. faecalis, S. agalactiae
+trans <- function(x){pmin(x, 8) + 0.05*pmax(x-8,0)} #Function to transform data to y positions
+yticks <- c(0, 2, 4, 6, 40, 60, 80)
+inner_join(df.s, taxon_pool.s, by="taxon") %>% 
+        mutate(taxon=if_else(pool, "Other", taxon)) %>% 
+        group_by(fraction, taxon) %>% 
+        summarise(percentage=sum(percentage), .groups="drop") %>% 
+        filter(taxon %in% c("*Streptococcus agalactiae*", 
+                            "*Enterococcus faecalis*", 
+                            "*Lactococcus lactis*")) %>% 
+        mutate(fraction=str_replace(fraction, "M0007", "Pre")) %>% 
+        mutate(fraction=str_replace(fraction, "M0004", "eTHB")) %>% 
+        mutate(fraction=str_replace(fraction, "M0008", "eBHI")) %>% 
+        mutate(fraction=str_replace(fraction, "M0009", "chromID")) %>% 
+        mutate(fraction=factor(fraction, levels=c("Pre", "eTHB", "eBHI", "chromID"))) %>% 
+        mutate(percentage2=trans(percentage)) %>% 
+        ggplot(aes(x=fraction, y=percentage2, fill=taxon)) +
+        geom_bar(stat="identity", position=position_dodge()) +
+        scale_fill_manual(values=c("#7570B3", "#66A61E", "darkred")) +
+        geom_rect(aes(xmin=1, xmax=4, ymin=7.8, ymax=8.4), fill="white") +
+        scale_y_continuous(limits=c(0,NA), breaks=trans(yticks), labels=yticks) +
+        theme(axis.text.x=element_text(size=20),
+              legend.text=element_markdown(),
+              legend.position=c(0.25,0.9)) +
+        labs(x="Enrichment fraction", y="Relative abundance (%)", fill=NULL)
+ggsave('../output_figures/fig02_c_illumina_pilot_taxo_relabund_target_species.svg', 
+       width=10, height=8)
+
+```
+
+#### Checking assembled genome completeness of four enrichment fractions
+
+```{r}
+# Read in data
+dat <- read.table("../tables/metagenomics.metaphlan4.pilot.s.summary.txt", 
+                  header=true, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=2))
+
+dat %>% 
+        mutate(`GBS_abundance`=if_else(`GBS_abundance`==0,
+                                       `GBS_abundance`+0.01,
+                                       `GBS_abundance`)) %>%
+        ggplot(aes(x=`Genome_length`/2.21e6*100, y=`GBS_abundance`)) + 
+        geom_jitter(aes(color=`Enrichment`), stroke=1, size=12, width=1.5, height=0.2) + 
+        scale_y_log10(breaks=c(0,0.01,0.1,1,10,100), labels=c(0,0.01,0.1,1,10,100)) +
+        scale_color_manual(name="Metagenomics<br>Analysis", 
+                           values=wes_palette(n=4, name="GrandBudapest1")) +
+        guides(fill=guide_legend(override.aes=list(size=5))) +
+        annotation_logticks(sides="l") +
+        labs(y="GBS relative abundance (%)", x="Assembled genome completeness (%)") +
+        theme(legend.title=element_markdown(size=20))
+ggsave('../output_figures/fig02_e_illumina_pilot_assembly_qc.svg', 
+       width =12, height = 8)
+
+```
+
+####
+
+```{r}
+sessionInfo()
+```
+

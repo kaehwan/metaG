@@ -1,0 +1,60 @@
+---
+title: "supfig02"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source("configuration.R")
+pacman::p_load("ggtext")
+```
+
+#### Heatmap summary of spike-in samples in assembly-based analysis workflow
+
+```{r}
+meta <- read.table("../metadata/metagenomics_spike_metadata_mag.txt",
+                   header=TRUE, sep="\t") %>% 
+        mutate(sample_id=c(rep("S01", 5), rep("S02", 5), 
+                           rep("S03", 5), rep("S04", 5), 
+                           rep("S05", 5), rep("S06", 5))) %>% 
+        select(sample_id, GBS_spike_level, GBS_isolation, GBS_mag_detected, GBS_mag_seqTyped) %>% 
+        rename(spike_level=GBS_spike_level, SI=GBS_isolation, 
+               mgD=GBS_mag_detected, mgT=GBS_mag_seqTyped) %>% 
+        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
+                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
+                                  '4-log'='10^4 - 10^5'), )
+
+meta %>% 
+        pivot_longer(-c('sample_id', 'spike_level'), names_to='workflows', values_to='values') %>% 
+        mutate(spike_level=factor(spike_level, levels=c('Non-spike', '10^1 - 10^2', 
+                                                        '10^2 - 10^3', '10^3 - 10^4', 
+                                                        '10^4 - 10^5')), 
+               workflows=factor(workflows, levels=c('SI', 'mgD', 'mgT')),
+               values=factor(values, levels=c('Yes', 'No'))) %>% 
+        ggplot(aes(x=workflows, y=sample_id, fill=values)) +
+        geom_tile(color='black', size=0.35) +
+        facet_grid(.~ spike_level) +
+        coord_fixed() +
+        scale_fill_manual(name='', values=c('brown', 'lightgrey')) +
+        labs(x='', y='Samples', title="GBS spike level (cfu)") +
+        theme(panel.border=element_blank(),
+              axis.ticks=element_blank(),
+              plot.title=element_text(size=22),
+              axis.text.x=element_text(angle=45, hjust=1, vjust=1),
+              strip.text.x=element_markdown(),
+              strip.background=element_blank())
+ggsave('../output_figures/supfig02_illumina_spike_assembly_analysis_summary.svg', 
+       width=14, height=8)
+
+```
+
+

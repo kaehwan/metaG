@@ -1,0 +1,5 @@
+	Non-spike	1-log	2-log	3-log
+Standard GBS isolation	NO	NO	NO	YES
+Kraken2 GBS detection 	NO	NO	YES	YES
+Nanopore ST typing	NO	NO	NO	YES
+
