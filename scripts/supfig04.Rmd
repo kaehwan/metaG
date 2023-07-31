@@ -1,0 +1,58 @@
+---
+title: "fig04"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source("configuration.R")
+pacman::p_load("ggtext")
+```
+
+####
+
+```{r}
+# Load nanopore metadata
+meta.nanopore <- read.table("../metadata/metagenomics_spike_nanopore_metadata.txt",
+                            header=true, sep="\t") %>% 
+        rename(workflows=X, `Non-spike`=`Non.spike`, 
+               `10^1 - 10^2`=`X1.log`, `10^2 - 10^3`=`X2.log`, 
+               `10^3 - 10^4`=`X3.log`) %>% 
+        column_to_rownames("workflows") %>% 
+        t() %>% as.data.frame() %>% 
+        rownames_to_column("spike_level") %>% 
+        rename(SI=`Standard GBS isolation`, 
+               nMD=`Kraken2 GBS detection `, 
+               nMT=`Nanopore ST typing`) %>% 
+        mutate(SI=recode(SI, 'NO'='No', 'YES'='Yes'), 
+               nMD=recode(nMD, 'NO'='No', 'YES'='Yes'), 
+               nMT=recode(nMT, 'NO'='No', 'YES'='Yes')) %>% 
+        pivot_longer(-c('spike_level'), names_to='workflows', values_to='values') %>% 
+        mutate(spike_level=factor(spike_level, levels=c('Non-spike', '10^1 - 10^2', 
+                                                        '10^2 - 10^3', '10^3 - 10^4')),
+               workflows=factor(workflows, levels=c('SI', 'nMD', 'nMT')),
+               values=factor(values, levels=c('Yes', 'No')))
+
+meta.nanopore %>% 
+        ggplot2::ggplot(ggplot2::aes(x=workflows, y=spike_level, fill=values)) +
+        ggplot2::geom_tile(color='black', size=0.35) +
+        ggplot2::coord_fixed() +
+        ggplot2::scale_fill_manual(name='', values=c('brown', 'grey')) +
+        ggplot2::labs(x='', y='GBS spike level (cfu)') +
+        ggplot2::theme(panel.border=ggplot2::element_blank(),
+                       axis.ticks=ggplot2::element_blank(),
+                       axis.text.y=element_markdown())
+ggplot2::ggsave('../output_figures/supfig04_c_nanopore_spike_summary.svg', 
+       width=14, height=8)
+
+```
+

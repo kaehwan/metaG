@@ -15,112 +15,112 @@ false <- FALSE
 
 ```{r}
 source("configuration.R")
-library(vegan)
-library(ggtext)
-library(ComplexHeatmap)
+library(wesanderson)
+pacman::p_load("ggtext")
 ```
 
-#### Principal composition analysis for natural samples
+#### Checking assembled genome completeness of four enrichment fractions from assembly-based analytics
 
 ```{r}
-### Preprocess data - Genus level ###
-meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
-                   header=TRUE, row.names=4, sep="\t")
-dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.g", 
-                  header=TRUE, row.names=1)
-dat[dat < 0.1] <- 0
-dat <- dat[rowSums(dat)>0, ]
-### MDS ###
-dist.mat <- vegdist(t(dat))
-cmds <- cmdscale(dist.mat, k=2, eig=TRUE)
-eigen <- cmds$eig / sum(cmds$eig) * 100
-dat.merged <- merge(cmds$points, meta, by.x=0, by.y=0, all.x=TRUE) %>% 
-        mutate(GBS_detected=str_replace_all(GBS_detected, "Yes", "GBS detected")) %>% 
-        mutate(GBS_detected=str_replace_all(GBS_detected, "No", "GBS not detected"))
-dat.merged$GBS_detected <- fct_relevel(factor(dat.merged$GBS_detected), "GBS detected")
-### PCoA ###
-p.pcoa.g <- dat.merged %>% 
-        rename(`Metagenomics<br>detection`=GBS_detected) %>% 
-        ggplot(., aes(x=V1, y=V2, col=`Metagenomics<br>detection`, 
-                      fill=`Metagenomics<br>detection`, shape=`Metagenomics<br>detection`), lwd=2) +
-        geom_density_2d(aes(x=V1, y=V2), inherit.aes=FALSE, col='grey', lwd=1) +
-        geom_point(size=5) +
-        labs(x=paste0('MDS1 (', round(eigen[1], 1), '%)'),
-             y=paste0('MDS2 (', round(eigen[2], 1), '%)')) +
-        scale_color_manual(name="Metagenomics<br>workflow",
-                           values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
-        scale_fill_manual(name="Metagenomics<br>workflow",
-                          values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
-        scale_shape_manual(name="Metagenomics<br>workflow", values=c(19,23)) +
-        guides(color=guide_legend(override.aes=list(size=5)),) +
-        theme(legend.title=element_markdown(size=20))
-p.pcoa.g
-ggsave('../output_figures/supfig01_a_illumina_control_taxo_genus_pcoa.svg', width =12, height = 8)
+# Read in data
+dat <- read.table("../tables/metagenomics.metaphlan4.pilot.s.gbs.txt", 
+                  header=true, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=2)) %>% 
+        select(Library, Enrichment, GBS_assembly_detected, 
+               GBS_assembly_typed, GBS_assembly_genome_length) 
 
-
-# 
-# ### Preprocess data - Species level ###
-# meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
-#                    header=TRUE, row.names=4, sep="\t")
-# dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s", 
-#                   header=TRUE, row.names=1)
-# dat[dat < 0.1] <- 0
-# dat <- dat[rowSums(dat)>0, ]
-# ### MDS ###
-# dist.mat <- vegdist(t(dat))
-# cmds <- cmdscale(dist.mat, k=2, eig=TRUE)
-# eigen <- cmds$eig / sum(cmds$eig) * 100
-# dat.merged <- merge(cmds$points, meta, by.x=0, by.y=0, all.x=TRUE)
-# dat.merged$GBS_detected <- fct_relevel(factor(dat.merged$GBS_detected), 'Yes')
-# ### PCoA ###
-# p.pcoa.s <- dat.merged %>% 
-#         rename(`Metagenomics<br>detection`=GBS_detected) %>% 
-#         ggplot(., aes(x=V1, y=V2, col=`Metagenomics<br>detection`, fill=`Metagenomics<br>detection`, shape=`Metagenomics<br>detection`), lwd=2) +
-#         geom_density_2d(aes(x=V1, y=V2), inherit.aes=FALSE, col='grey', lwd=1) +
-#         geom_point(size=4.5) +
-#         labs(x=paste0('MDS1 (', round(eigen[1], 1), '%)'),
-#              y=paste0('MDS2 (', round(eigen[2], 1), '%)')) +
-#         scale_color_manual(values=c(pal_npg(c("nrc"))(10)[c(1,3,7,2,5,10,4)], 'grey')) +
-#         scale_fill_manual(values=c(pal_npg(c("nrc"))(10)[c(1,3,7,2,5,10,4)], 'grey')) +
-#         scale_shape_manual(values=c(19,23)) +
-#         theme(legend.title=element_markdown(size=20))
-# p.pcoa.s
+dat %>% 
+        mutate(Assembly_genome_length=if_else(GBS_assembly_detected=="No",
+                                              0,
+                                              GBS_assembly_genome_length),
+               Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID"))) %>% 
+        ggplot(aes(x=Enrichment ,y=GBS_assembly_genome_length/2.21e6*100, fill=Enrichment)) +
+        geom_bar(stat="identity", position=position_dodge()) +
+        scale_fill_manual(values=wes_palette(n=4, name="GrandBudapest1")) +
+        theme(axis.text.x=element_text(size=20),
+              legend.text=element_markdown(),
+              legend.position="none") +
+        labs(x="Enrichment fraction", y="Assembled genome completeness (%)")
+ggsave('../output_figures/supfig01_b_illumina_pilot_assembly_genome_qc.svg', 
+       width =12, height = 8)
 
 ```
 
-#### Hierarchical clustering for natural samples
+#### Heatmap summary of spike-in samples in assembly-based analysis workflow
 
 ```{r}
-### Species level ###
-# Load metadata
-meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
-                   header=TRUE, row.names=4, sep="\t")
-# Load pre-processed metaphlan4 relative abundance
-dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s",
-                  header=TRUE, row.names=1) %>% 
-        mutate(across(where(is.numeric), round, digits=4)) # round to 4 digits
-# remove GBS from result
-species_to_remove <- "s__Streptococcus_agalactiae"
-dat <- dat[!(row.names(dat) %in% species_to_remove), ]
-# filter out extremely low abundance sample
-dat[dat < 0.1000] <- 0
-dat <- dat[rowSums(dat)>0, ]
-# re-adjust relative abundance to 100 %
-dat <- apply(dat, 2, function(x) x/sum(x)) * 100
-# set upper limit of rel. abund. to 20 %
-dat[dat > 20] <- 20
+meta <- read.table("../metadata/metagenomics_spike_metadata.txt",
+                   header=TRUE, sep="\t") %>% 
+        rename(sample_id=Sample_ID, spike_level=GBS_spike_level, SI=GBS_isolation, 
+               mgD=GBS_assembly_detected, mgT=GBS_assembly_seqTyped) %>% 
+        select(sample_id, spike_level, SI, mgD, mgT) %>% 
+        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
+                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
+                                  '4-log'='10^4 - 10^5'), )
 
-meta.t <- t(meta) %>% data.frame()
-dat <- rbind(meta.t, dat)
-row_to_remove <- c("Month", "Year", "Market_type", "Sample_ID", "Category", "Sample_type",
-                   "Storage_conditions", "GBS_detected", "GBS_seqTyped")
-dat <- dat[!row.names(dat) %in% row_to_remove,]
-row.names(dat) <- gsub("s__", "", row.names(dat))
-row.names(dat) <- gsub("_", " ", row.names(dat))
-write.table(dat, '../output_tables/metagenomics.metaphlan4.control.filtered.s.renamed2', 
-            sep='\t', row.names = TRUE, col.names = NA, quote=F)
+meta %>% 
+        pivot_longer(-c('sample_id', 'spike_level'), names_to='workflows', values_to='values') %>% 
+        mutate(spike_level=factor(spike_level, levels=c('Non-spike', '10^1 - 10^2', 
+                                                        '10^2 - 10^3', '10^3 - 10^4', 
+                                                        '10^4 - 10^5')), 
+               workflows=factor(workflows, levels=c('SI', 'mgD', 'mgT')),
+               values=factor(values, levels=c('Yes', 'No'))) %>% 
+        ggplot(aes(x=workflows, y=sample_id, fill=values)) +
+        geom_tile(color='black', size=0.35) +
+        facet_grid(.~ spike_level) +
+        coord_fixed() +
+        scale_fill_manual(name='', values=c('brown', 'lightgrey')) +
+        labs(x='', y='Samples', title="GBS spike level (cfu)") +
+        theme(panel.border=element_blank(),
+              axis.ticks=element_blank(),
+              plot.title=element_text(size=22),
+              axis.text.x=element_text(angle=45, hjust=1, vjust=1),
+              strip.text.x=element_markdown(),
+              strip.background=element_blank())
+ggsave('../output_figures/supfig01_c_illumina_spike_assembly_analysis_summary.svg', 
+       width=14, height=8)
 
-#run the following command in bash
-#./scripts/run_hclust2.sh
+```
+
+#### Assembled genome completeness of assembly-based metagenomics analytics workflow
+
+```{r}
+meta.assembled <- read.table("../metadata/metagenomics_spike_metadata.txt",
+                             header=TRUE, sep="\t") %>% 
+        select(Library, GBS_spike_level, GBS_assembly_genome_length) %>% 
+        rename(spike_level=GBS_spike_level, genome_length=GBS_assembly_genome_length) %>% 
+        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
+                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
+                                  '4-log'='10^4 - 10^5'),
+               analytics="Assembly")
+meta.mapping <- read.table("../metadata/metagenomics_spike_metadata.txt",
+                             header=TRUE, sep="\t") %>% 
+        select(Library, GBS_spike_level, GBS_map_genome_length) %>% 
+        rename(spike_level=GBS_spike_level, genome_length=GBS_map_genome_length) %>% 
+        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
+                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
+                                  '4-log'='10^4 - 10^5'),
+               analytics="Mapping")
+df <- rbind(meta.assembled, meta.mapping)
+
+# create plot using ggplot() and geom_boxplot() functions
+df %>% filter(spike_level %in% c("10^2 - 10^3", "10^3 - 10^4", "10^4 - 10^5")) %>% 
+        mutate(genome_completeness=genome_length/2.21e6*100) %>% 
+        ggplot(., aes(analytics, genome_completeness, fill=analytics)) +
+        facet_grid(cols=vars(spike_level), scale="free") + 
+        geom_boxplot() +
+        # geom_point() is used to make points at data values
+        geom_point(aes(fill=analytics,group=Library), size=5,
+                   shape=21, position=position_jitter(w=0.05, h=2)) +
+        # geom_line() joins the paired datapoints
+        geom_line(aes(group=Library), linetype=2, size=1.3) +
+        labs(x="Analytics workflow", y="Assembled genome<br>completeness (%)") +
+        theme(axis.title.y=element_markdown(),
+              legend.position="none",
+              strip.text=element_markdown(),
+              strip.background=element_blank())
+ggsave('../output_figures/supfig01_d_illumina_spike_assembly_vs_mapping_analysis.svg', 
+       width=14, height=8)
+
 ```
 

@@ -1,5 +1,0 @@
-SampleID	Library	Enrichment	GBS_detected	GBS_typed	Genome_length	GBS_abundance	Completeness	Contamination
-M0007	M0007	Pre	No	No	33573	0	0	0
-M0004	M0004	eTHB	Yes	Yes	2099497	6.1573	99.41	0.19
-M0008	M0008	eBHI	Yes	Yes	2093283	6.6318	99.41	0.19
-M0009	M0009	chromID	Yes	Yes	2044671	1.596	99.41	0.13

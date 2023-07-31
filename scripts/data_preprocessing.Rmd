@@ -17,13 +17,52 @@ false <- FALSE
 source("configuration.R")
 ```
 
-#### preprocessing natural real-world samples' metaphlan data
+#### preprocessing pilot-study samples' metaphlan data
+
+```{r}
+
+# Read in metadata
+meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=TRUE, row.names=1) %>% 
+        mutate(Library=row.names(.))
+# Read in metaphlan abundance data at species level
+dat.s <- read.table("../tables/metagenomics.metaphlan4.pilot.all.s", header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4))
+# Preprocess metadata
+sample_to_analyse <- c("M0007", "M0004", "M0008", "M0009")
+meta.fil <- meta[row.names(meta) %in% sample_to_analyse, ] %>% 
+        mutate(Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID")))
+# Preprocess metaphlan abundance data
+colnames(dat.s) <- sub("_metagenome", "", colnames(dat.s))
+row.names(dat.s) <- gsub("s__", "", row.names(dat.s))
+dat.s.fil <- dat.s %>% select(sample_to_analyse)
+dat.s.fil[dat.s.fil < 0.1] <- 0
+dat.s.fil <- dat.s.fil[rowSums(dat.s.fil)>0, ] %>% 
+        apply(., 2, function(x) x/sum(x))*100
+write.table(dat.s.fil, '../output_tables/metagenomics.metaphlan4.pilot.filtered.s', 
+            sep='\t', row.names=TRUE, col.names=NA, quote=F)
+
+# Read in metaphlan abundance data at genus level
+dat.g <- read.table("../tables/metagenomics.metaphlan4.pilot.all.g", header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4))
+# Preprocess metaphlan abundance data
+colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
+row.names(dat.g) <- gsub("g__", "", row.names(dat.g))
+dat.g.fil <- dat.g %>% select(sample_to_analyse)
+dat.g.fil[dat.g.fil < 0.1] <- 0
+dat.g.fil <- dat.g.fil[rowSums(dat.g.fil)>0, ] %>% 
+        apply(., 2, function(x) x/sum(x))*100
+write.table(dat.g.fil, '../output_tables/metagenomics.metaphlan4.pilot.filtered.g', 
+            sep='\t', row.names=TRUE, col.names=NA, quote=F)
+```
+
+#### preprocessing natural real-world samples' metaphlan abundance data
 
 ```{r}
 # Preprocess: Species-level
 meta <- read.table('../metadata/metagenomics_control_metadata.txt', 
                    header=TRUE, row.names=4, sep="\t")
-dat.s <- read.table('../tables/metagenomics.metaphlan4.control.all.s', header=TRUE, row.names=1)
+dat.s <- read.table('../tables/metagenomics.metaphlan4.control.all.s', header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4))
 colnames(dat.s) <- sub("_metagenome", "", colnames(dat.s))
 dat.s[dat.s < 0.1] <- 0
 dat.s.fil <- dat.s[rowSums(dat.s)>0, ]
@@ -33,7 +72,8 @@ write.table(dat.s.fil, '../output_tables/metagenomics.metaphlan4.control.filtere
             sep='\t', row.names=TRUE, col.names=NA, quote=F)
 
 # Preprocess: Genus level
-dat.g <- read.table('../tables/metagenomics.metaphlan4.control.all.g', header=TRUE, row.names=1)
+dat.g <- read.table('../tables/metagenomics.metaphlan4.control.all.g', header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4))
 colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
 dat.g[dat.g < 0.1] <- 0
 dat.g.fil <- dat.g[rowSums(dat.g)>0, ]
@@ -44,13 +84,13 @@ write.table(dat.g.fil, '../output_tables/metagenomics.metaphlan4.control.filtere
 
 ```
 
-#### preprocessing artificial spike-in samples' metaphlan data
+#### preprocessing artificial spike-in samples' metaphlan abundance data
 
 ```{r}
 # Preprocess: Species level
 meta.spike <- read.table('../metadata/metagenomics_spike_metadata.txt', header=TRUE, 
                          row.names=4, sep="\t")
-dat.spike <- read.table('../tables/metagenomics.metaphlan4.spike.s', header=TRUE, row.names=1) %>% 
+dat.spike <- read.table('../tables/metagenomics.metaphlan4.spike.all.s', header=TRUE, row.names=1) %>% 
         mutate(across(where(is.numeric), round, digits=4))
 colnames(dat.spike) <- sub("_metagenome", "", colnames(dat.spike))
 dat.spike[dat.spike < 0.1] <- 0

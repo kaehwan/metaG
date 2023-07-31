@@ -28,20 +28,14 @@ pacman::p_load(svglite)
 ```{r}
 
 # Read in metadata & genus metaphlan abundance
-meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=TRUE, row.names=4) %>% 
+meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=TRUE, row.names=1) %>% 
         mutate(Library=row.names(.))
-dat.g <- read.table("../tables/metagenomics.metaphlan4.pilot.g", header=TRUE, row.names=1)
 # Preprocess metadata
 sample_to_analyse <- c("M0007", "M0004", "M0008", "M0009")
 meta.fil <- meta[row.names(meta) %in% sample_to_analyse, ] %>% 
         mutate(Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID")))
-# Preprocess data
-colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
-row.names(dat.g) <- gsub("g__", "", row.names(dat.g))
-dat.g.fil <- dat.g %>% select(sample_to_analyse)
-dat.g.fil[dat.g.fil < 0.1] <- 0
-dat.g.fil <- dat.g.fil[rowSums(dat.g.fil)>0, ] %>% 
-        apply(., 2, function(x) x/sum(x))*100
+# Read in preprocessed genus metaphlan abundance
+dat.g.fil <- read.table("../output_tables/metagenomics.metaphlan4.pilot.filtered.g", header=true, row.names=1)
 
 Shan <- data.frame(Shannon=(diversity(t(dat.g.fil),index="shannon"))) %>% 
         rownames_to_column('Library')
@@ -111,28 +105,24 @@ ggsave('../output_figures/fig02_b_illumina_pilot_taxo_relabund_genus.svg',
 #### Relative abundance of selected species in four enrichment fractions
 
 ```{r}
+
 # Read in metadata & species-level metaphlan abundance
-meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=true, row.names=4) %>% 
+meta <- read.table("../metadata/metagenomics_pilot_metadata.txt", header=true, row.names=1) %>% 
         mutate(Library=row.names(.))
-dat.s <- read.table("../tables/metagenomics.metaphlan4.pilot.s", header=true, row.names=1) 
 # Preprocess metadata
 sample_to_analyse <- c("M0007", "M0004", "M0008", "M0009")
 meta.fil <- meta[row.names(meta) %in% sample_to_analyse, ] %>% 
         mutate(Enrichment=factor(Enrichment, levels=c("Pre", "eTHB", "eBHI", "chromID")))
-# Preprocess data
-colnames(dat.s) <- sub("_metagenome", "", colnames(dat.s))
-row.names(dat.s) <- gsub("s__", "", row.names(dat.s)) %>% gsub("_", " ", .)
-dat.s.fil <- dat.s %>% select(sample_to_analyse)
-dat.s.fil[dat.s.fil < 0.1] <- 0
-dat.s.fil <- dat.s.fil[rowSums(dat.s.fil)>0, ] %>% 
-        apply(., 2, function(x) x/sum(x))*100
-
+# Read in preprocessed species-level metaphlan abundance
+dat.s.fil <- read.table("../output_tables/metagenomics.metaphlan4.pilot.filtered.s", header=true, row.names=1) 
+        
 df.s <- dat.s.fil %>% 
         t() %>% 
         as.data.frame() %>% 
         rownames_to_column("fraction") %>% 
         pivot_longer(-fraction, names_to="taxon", values_to="percentage") %>% 
-        mutate(taxon=str_replace(taxon, "^(\\S* \\S*)$", "*\\1*"))
+        mutate(taxon=gsub("_", " ", taxon),
+               taxon=str_replace(taxon, "^(\\S* \\S*)$", "*\\1*"))
 taxon_pool.s <- df.s %>% 
         group_by(taxon) %>% 
         summarise(pool=max(percentage)<5, .groups="drop")
@@ -171,7 +161,7 @@ ggsave('../output_figures/fig02_c_illumina_pilot_taxo_relabund_target_species.sv
 
 ```{r}
 # Read in data
-dat <- read.table("../tables/metagenomics.metaphlan4.pilot.s.summary.txt", 
+dat <- read.table("../tables/metagenomics.metaphlan4.pilot.s.gbs.txt", 
                   header=true, row.names=1) %>% 
         mutate(across(where(is.numeric), round, digits=2))
 

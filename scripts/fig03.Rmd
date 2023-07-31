@@ -24,22 +24,23 @@ library(scales)
 
 ```{r}
 
-meta <- read.table("../metadata/metagenomics_spike_illumina_metadata.txt",
-                    header=TRUE, sep="\t")
-colnames(meta) <- c("Workflow", "Non-spike", "10^1 - 10^2",
-                     "10^2 - 10^3", "10^3 - 10^4", "10^4 - 10^5")
-meta$Workflow <- c("Standard GBS<br>isolation", 
-                   "Metagenomics -<br>GBS detection", 
-                   "Metagenome-based<br>ST typing", 
-                   "Metagenomics -<br>Sequence typing")
+res_summary <- read.table("../tables/metagenomics_spike_illumina_workflow_summary.txt",
+                    header=TRUE, sep="\t", row.names=1) %>% 
+  rownames_to_column("Workflow") %>% 
+  rename(`Non-spike`=`Non.spike`, `10^1 - 10^2`=`X1.log`,
+         `10^2 - 10^3`=`X2.log`, `10^3 - 10^4`=`X3.log`,
+         `10^4 - 10^5`=`X4.log`)
+res_summary$Workflow <- c("Standard GBS<br>isolation", 
+                   "Mapping-based<br>GBS detection", 
+                   "Assembly-based<br>Sequence typing", 
+                   "Mapping-based<br>Sequence typing")
 
-melt(meta) %>% 
+melt(res_summary) %>% 
         rename(`GBS spike level (cfu)`=variable, Value=value) %>%
         mutate(Workflow=factor(Workflow, levels=c("Standard GBS<br>isolation", 
-                                                  "Metagenomics -<br>GBS detection", 
-                                                  "Metagenome-based<br>ST typing", 
-                                                  "Metagenomics -<br>Sequence typing"))) %>%
-        filter(Workflow!="Metagenome-based<br>ST typing") %>% 
+                                                  "Mapping-based<br>GBS detection",
+                                                  "Assembly-based<br>Sequence typing",
+                                                  "Mapping-based<br>Sequence typing"))) %>%
         ggplot2::ggplot(ggplot2::aes(x=`GBS spike level (cfu)`, y=Workflow, fill=Value)) +
         ggplot2::geom_tile() +
         ggplot2::geom_text(ggplot2::aes(label = Value), size=6, fontface = "bold") +
@@ -53,19 +54,13 @@ melt(meta) %>%
 
 # Summary of benchmarking w/ GBS spike-in experiments ---------------------
 meta <- read.table("../metadata/metagenomics_spike_metadata.txt",
-                    header=TRUE, sep="\t") %>% 
-        mutate(sample_id=c(rep("S01", 5), 
-                           rep("S02", 5), 
-                           rep("S03", 5), 
-                           rep("S04", 5), 
-                           rep("S05", 5), 
-                           rep("S06", 5))) %>% 
-        select(sample_id, GBS_spike_level, GBS_isolation, GBS_detected, GBS_seqTyped) %>% 
-        rename(spike_level=GBS_spike_level, SI=GBS_isolation, 
-               sMD=GBS_detected, sMT=GBS_seqTyped) %>%
-        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
-                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
-                                  '4-log'='10^4 - 10^5'))
+                    header=TRUE, sep="\t") %>%
+  rename(sample_id=Sample_ID, spike_level=GBS_spike_level, 
+         SI=GBS_isolation, sMD=GBS_map_detected, sMT=GBS_map_seqTyped) %>%
+  select(sample_id, spike_level, SI, sMD, sMT) %>%
+  mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
+                            '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
+                            '4-log'='10^4 - 10^5'))
 
 meta %>%
         pivot_longer(-c('sample_id', 'spike_level'), names_to='workflows', values_to='values') %>% 
@@ -101,12 +96,12 @@ ggplot2::ggsave('../output_figures/fig03_b_illumina_spike_result_summary.svg',
 meta <- read.table('../metadata/metagenomics_control_metadata.txt', 
                    header=TRUE, row.names=4, sep="\t") %>% 
         rownames_to_column("Library") %>% 
-        select(Library, GBS_isolated, GBS_detected, GBS_seqTyped)
+        select(Library, GBS_isolated, GBS_map_detected, GBS_map_seqTyped)
 # import spike-in samples metadata
 meta.spike <- read.table('../metadata/metagenomics_spike_metadata.txt',
                          header=TRUE, row.names=4, sep="\t") %>% 
         rownames_to_column("Library") %>% 
-        select(Library, GBS_spike_level, GBS_isolation, GBS_detected, GBS_seqTyped)
+        select(Library, GBS_spike_level, GBS_isolation, GBS_map_detected, GBS_map_seqTyped)
 # import real-world metaphlan4 relative abundance        
 dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s", 
                   header=TRUE, row.names=1) %>% 
@@ -129,8 +124,8 @@ dat.spike <- dat.spike[rowSums(dat.spike)>0, ] %>%
         select("s__Streptococcus_agalactiae") %>% 
         rename(`Streptococcus agalactiae`=s__Streptococcus_agalactiae) %>% 
         rownames_to_column("Library")
-# import real-world QUAST result
-quast.result <- read.table("../tables/quast_results/results_2023_02_06_13_46_29/report.tsv", 
+# import QUAST result of natural real-world fish samples
+quast.result <- read.table("../tables/quast/metagenomics_control_gbs_quast_report.tsv", 
                            header=TRUE, row.names=1, sep="\t") %>% 
         t() %>% 
         as.data.frame() %>% 
@@ -139,35 +134,35 @@ quast.result <- read.table("../tables/quast_results/results_2023_02_06_13_46_29/
         mutate(Library=gsub(".scaffolds", "", Library)) %>% 
         mutate(Library=gsub(".spades.step", "", Library)) %>% 
         mutate(Library=gsub(".final_assembly", "", Library))
-# import spike-in quast result
-quast.spike <- read.table("../tables/quast_results/results_2023_02_06_18_13_33/report.tsv",
+# import QUAST result of spike-in fish samples
+quast.spike <- read.table("../tables/quast/metagenomics_spike_gbs_quast_report.tsv",
                           header=TRUE, row.names=1, sep="\t") %>% 
         t() %>% 
         as.data.frame() %>% 
         rownames_to_column("Library") %>% 
         select(Library, `Total length`, N50) %>% 
         mutate(Library=str_replace_all(Library, ".spades.step", ""))
-# import real-world CheckM result
-checkm.result <- read.csv("../tables/checkm.mapAssembly.control.csv",
-                          header=TRUE, row.names=2) %>%
-        rownames_to_column("Library") %>% 
-        rename(Quality=QUAL_y) %>% 
-        select(Library, Experiment, Completeness, Contamination, Quality) %>% 
-        mutate(Quality=factor(Quality, levels=c("HIGH", "MODERATE", 
-                                                "LOW", "INCOMPLETE")))
-# import spike-in CheckM result
-checkm.spike <- read.csv('../tables/checkm.mapAssembly.spike.csv',
-                         header=TRUE, row.names=2) %>% 
-        rownames_to_column("Library") %>% 
-        rename(Quality=QUAL_Y) %>% 
-        select(Library, Experiment, Completeness, Contamination, Quality) %>% 
-        mutate(Quality=factor(Quality, levels=c("HIGH", "MODERATE",
-                                                "LOW", "INCOMPLETE")))
+# # import real-world CheckM result
+# checkm <- read.csv("../tables/checkm.mapAssembly.control.csv",
+#                           header=TRUE, row.names=2) %>%
+#         rownames_to_column("Library") %>% 
+#         rename(Quality=QUAL_y) %>% 
+#         select(Library, Experiment, Completeness, Contamination, Quality) %>% 
+#         mutate(Quality=factor(Quality, levels=c("HIGH", "MODERATE", 
+#                                                 "LOW", "INCOMPLETE")))
+# # import spike-in CheckM result
+# checkm.spike <- read.csv('../tables/checkm.mapAssembly.spike.csv',
+#                          header=TRUE, row.names=2) %>% 
+#         rownames_to_column("Library") %>% 
+#         rename(Quality=QUAL_Y) %>% 
+#         select(Library, Experiment, Completeness, Contamination, Quality) %>% 
+#         mutate(Quality=factor(Quality, levels=c("HIGH", "MODERATE",
+#                                                 "LOW", "INCOMPLETE")))
 # inner_join all real-world data: metadata, metaphlan4 relative abundance, QUAST, CheckM
 df <- inner_join(meta, quast.result, by="Library") %>% 
         merge(., dat, by="Library") %>% 
-        merge(., checkm.result, by="Library") %>%
-        rename(`GBS detected`=GBS_detected, `Sequence typed`=GBS_seqTyped) %>% 
+        # merge(., checkm, by="Library") %>%
+        rename(`GBS detected`=GBS_map_detected, `Sequence typed`=GBS_map_seqTyped) %>% 
         mutate(`GBS detected`=factor(`GBS detected`, levels=c("Yes", "No"))) %>% 
         mutate(`Sequence typed`=factor(`Sequence typed`, levels=c("Yes", "No"))) %>% 
         mutate(`GBS isolation`=if_else(`GBS_isolated`=="Yes", "Isolated", "Not isolated")) %>% 
@@ -185,8 +180,8 @@ df <- inner_join(meta, quast.result, by="Library") %>%
 # inner_join all spike-in data: metadata, metaphlan4 relative abundance, QUAST, CheckM
 df.spike <- inner_join(meta.spike, quast.spike, by="Library") %>% 
         merge(., dat.spike, by="Library") %>% 
-        merge(., checkm.spike, by="Library") %>%
-        rename(`GBS detected`=GBS_detected, `Sequence typed`=GBS_seqTyped) %>% 
+        # merge(., checkm.spike, by="Library") %>%
+        rename(`GBS detected`=GBS_map_detected, `Sequence typed`=GBS_map_seqTyped) %>% 
         mutate(`GBS detected`=factor(`GBS detected`, levels=c("Yes", "No"))) %>% 
         mutate(`Sequence typed`=factor(`Sequence typed`, levels=c("Yes", "No"))) %>% 
         mutate(`GBS isolation`=if_else(`GBS_isolation`=="Yes", "Isolated", "Not isolated")) %>% 
@@ -252,5 +247,39 @@ df %>%
         ggplot2::theme(legend.title=element_markdown(size=20))
 ggplot2::ggsave('../output_figures/fig03_d_illumina_control_assembly_qc.svg', 
        width =12, height = 8)
+```
+
+#### Plotting SNP frequencies of recovered GBS genome from real-world fish samples M0045
+
+```{r}
+path <- "/Users/simkaehwan/Documents/Bioinfo/metaG/tables/vcf/"
+
+vcf <- paste0(path, list.files(path, pattern=".vcf")) %>% 
+  map_df(~fread(., skip="#CHROM", data.table=F)) %>% 
+  pivot_longer(cols=starts_with("/mnt/ab2/common/illumina/metaG_natural/align2ref/"), 
+               names_to="Sample", 
+               names_prefix="/mnt/ab2/common/illumina/metaG_natural/align2ref/", 
+               values_to="Record", 
+               values_drop_na=TRUE) %>% 
+  rename(CHROM="#CHROM") %>% 
+  select(CHROM, POS, REF, ALT, FORMAT, Sample, Record) %>% 
+  separate(col=Record, into=c("GT", "PL", "DP", "SP", "ADF", "ADR", "AD"), sep=":") %>% 
+  separate(col=ALT, into=c("ALT1", "ALT2", "ALT3"), sep=",") %>% 
+  separate(col=AD, into=c("REF_count", "ALT1_count", "ALT2_count", "ALT3_count"), sep=",") %>% 
+  mutate(Sample=gsub(".bam", "", Sample),
+         ALT1_count=coalesce(as.numeric(ALT1_count), 0),
+         ALT2_count=coalesce(as.numeric(ALT2_count), 0),
+         ALT3_count=coalesce(as.numeric(ALT3_count), 0),
+         AAF=(ALT1_count)/as.numeric(DP)) %>% 
+  mutate(Ref="RefDB")
+
+vcf %>% 
+  filter(Sample=="M0045") %>% 
+  ggplot(aes(x=AAF, fill=Ref, color=Ref)) +
+  geom_histogram(binwidth=0.1, alpha=0.5, position="identity", color="darkblue", fill="lightblue") +
+  facet_wrap(~Sample, scale="free") +
+  scale_x_continuous(limits=c(0, 1.1), breaks=c(0.0, 0.5, 1.0)) +
+  theme(strip.background=element_rect(fill="white", color="white"))
+ggsave('../output_figures/fig03_e_illumina_control_snp_qc.svg', width=8, height=8)
 ```
 

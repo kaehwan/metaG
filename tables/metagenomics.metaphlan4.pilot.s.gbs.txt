@@ -1,0 +1,5 @@
+SampleID	Library	Enrichment	GBS_abundance	GBS_map_detected	GBS_map_typed	GBS_map_genome_length	GBS_assembly_detected	GBS_assembly_typed	GBS_assembly_genome_length
+M0007	M0007	Pre	0	No	No	33573	No	No	0
+M0004	M0004	eTHB	6.1573	Yes	Yes	2099497	Yes	Yes	1681956
+M0008	M0008	eBHI	6.6318	Yes	Yes	2093283	No	No	0
+M0009	M0009	chromID	1.596	Yes	Yes	2044671	Yes	Yes	2034422

@@ -1,7 +1,7 @@
 ---
 title: "supfig02"
 author: "kaehwan"
-date: "6/15/2023"
+date: "7/26/2023"
 output: html_document
 ---
 
@@ -11,50 +11,47 @@ true <- TRUE
 false <- FALSE
 ```
 
-#### Load libraries
-
 ```{r}
-source("configuration.R")
-pacman::p_load("ggtext")
+library(data.table)
+library(tidyverse)
 ```
 
-#### Heatmap summary of spike-in samples in assembly-based analysis workflow
+#### Plotting SNP frequencies of recovered GBS genomes from fish samples naturally contaminated with GBS
 
 ```{r}
-meta <- read.table("../metadata/metagenomics_spike_metadata_mag.txt",
-                   header=TRUE, sep="\t") %>% 
-        mutate(sample_id=c(rep("S01", 5), rep("S02", 5), 
-                           rep("S03", 5), rep("S04", 5), 
-                           rep("S05", 5), rep("S06", 5))) %>% 
-        select(sample_id, GBS_spike_level, GBS_isolation, GBS_mag_detected, GBS_mag_seqTyped) %>% 
-        rename(spike_level=GBS_spike_level, SI=GBS_isolation, 
-               mgD=GBS_mag_detected, mgT=GBS_mag_seqTyped) %>% 
-        mutate(spike_level=recode(spike_level, '1-log'='10^1 - 10^2', 
-                                  '2-log'='10^2 - 10^3', '3-log'='10^3 - 10^4', 
-                                  '4-log'='10^4 - 10^5'), )
+path <- "/Users/simkaehwan/Documents/Bioinfo/metaG/tables/vcf/"
 
-meta %>% 
-        pivot_longer(-c('sample_id', 'spike_level'), names_to='workflows', values_to='values') %>% 
-        mutate(spike_level=factor(spike_level, levels=c('Non-spike', '10^1 - 10^2', 
-                                                        '10^2 - 10^3', '10^3 - 10^4', 
-                                                        '10^4 - 10^5')), 
-               workflows=factor(workflows, levels=c('SI', 'mgD', 'mgT')),
-               values=factor(values, levels=c('Yes', 'No'))) %>% 
-        ggplot(aes(x=workflows, y=sample_id, fill=values)) +
-        geom_tile(color='black', size=0.35) +
-        facet_grid(.~ spike_level) +
-        coord_fixed() +
-        scale_fill_manual(name='', values=c('brown', 'lightgrey')) +
-        labs(x='', y='Samples', title="GBS spike level (cfu)") +
-        theme(panel.border=element_blank(),
-              axis.ticks=element_blank(),
-              plot.title=element_text(size=22),
-              axis.text.x=element_text(angle=45, hjust=1, vjust=1),
-              strip.text.x=element_markdown(),
-              strip.background=element_blank())
-ggsave('../output_figures/supfig02_illumina_spike_assembly_analysis_summary.svg', 
-       width=14, height=8)
+vcf <- paste0(path, list.files(path, pattern=".vcf")) %>% 
+  map_df(~fread(., skip="#CHROM", data.table=F)) %>% 
+  pivot_longer(cols=starts_with("/mnt/ab2/common/illumina/metaG_natural/align2ref/"), 
+               names_to="Sample", 
+               names_prefix="/mnt/ab2/common/illumina/metaG_natural/align2ref/", 
+               values_to="Record", 
+               values_drop_na=TRUE) %>% 
+  rename(CHROM="#CHROM") %>% 
+  select(CHROM, POS, REF, ALT, FORMAT, Sample, Record) %>% 
+  separate(col=Record, into=c("GT", "PL", "DP", "SP", "ADF", "ADR", "AD"), sep=":") %>% 
+  separate(col=ALT, into=c("ALT1", "ALT2", "ALT3"), sep=",") %>% 
+  separate(col=AD, into=c("REF_count", "ALT1_count", "ALT2_count", "ALT3_count"), sep=",") %>% 
+  mutate(Sample=gsub(".bam", "", Sample),
+         ALT1_count=coalesce(as.numeric(ALT1_count), 0),
+         ALT2_count=coalesce(as.numeric(ALT2_count), 0),
+         ALT3_count=coalesce(as.numeric(ALT3_count), 0),
+         AAF=(ALT1_count)/as.numeric(DP)) %>% 
+  mutate(Ref="RefDB")
 
+
+vcf %>% 
+  filter(Sample!="M0045") %>% 
+  ggplot(aes(x=AAF, fill=Ref, color=Ref)) +
+  geom_histogram(binwidth=0.1, alpha=0.5, position="identity", color="darkblue", fill="lightblue") +
+  facet_wrap(~Sample, scale="free") +
+  scale_x_continuous(limits=c(0, 1.1), breaks=c(0.0, 0.5, 1.0)) +
+  theme(strip.background=element_rect(fill="white", color="white"))
+ggsave('../output_figures/supfig02_illumina_control_snp_qc.svg', width=12, height=8)
 ```
 
+```{r}
+sessionInfo()
+```
 

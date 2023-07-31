@@ -1,0 +1,140 @@
+---
+title: "supfig03"
+author: "kaehwan"
+date: "6/15/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+true <- TRUE
+false <- FALSE
+```
+
+#### Load libraries
+
+```{r}
+source("configuration.R")
+library(vegan)
+library(ggtext)
+library(RColorBrewer)
+library(ComplexHeatmap)
+```
+
+#### Principal composition analysis for natural samples
+
+```{r}
+### Preprocess data - Genus level ###
+meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
+                   header=TRUE, row.names=4, sep="\t")
+dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.g", 
+                  header=TRUE, row.names=1)
+dat[dat < 0.1] <- 0
+dat <- dat[rowSums(dat)>0, ]
+### MDS ###
+dist.mat <- vegdist(t(dat))
+cmds <- cmdscale(dist.mat, k=2, eig=TRUE)
+eigen <- cmds$eig / sum(cmds$eig) * 100
+dat.merged <- merge(cmds$points, meta, by.x=0, by.y=0, all.x=TRUE) %>%
+        mutate(GBS_map_detected=factor(GBS_map_detected, levels=c("Yes", "No")))
+### PCoA ###
+p.pcoa.g <- dat.merged %>% 
+        rename(`Metagenomics<br>detection`=GBS_map_detected) %>% 
+        ggplot(., aes(x=V1, y=V2, col=`Metagenomics<br>detection`, 
+                      fill=`Metagenomics<br>detection`, shape=`Metagenomics<br>detection`), lwd=2) +
+        geom_density_2d(aes(x=V1, y=V2), inherit.aes=FALSE, col='grey', lwd=1) +
+        geom_point(size=5) +
+        labs(x=paste0('MDS1 (', round(eigen[1], 1), '%)'),
+             y=paste0('MDS2 (', round(eigen[2], 1), '%)')) +
+        scale_color_manual(name="Metagenomics<br>workflow",
+                           values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
+        scale_fill_manual(name="Metagenomics<br>workflow",
+                          values=c(pal_npg(c("nrc"))(10)[c(3,1,7,2,5,10,4)], 'grey')) +
+        scale_shape_manual(name="Metagenomics<br>workflow", values=c(19,23)) +
+        guides(color=guide_legend(override.aes=list(size=5)),) +
+        theme(legend.title=element_markdown(size=20))
+p.pcoa.g
+ggsave('../output_figures/supfig03_a_illumina_control_taxo_genus_pcoa.svg', 
+       width =12, height = 8)
+
+```
+
+#### Hierarchical clustering for natural samples
+
+```{r}
+### Species level ###
+# Load metadata
+meta <- read.table("../metadata/metagenomics_control_metadata.txt", 
+                   header=TRUE, row.names=4, sep="\t")
+# Load pre-processed metaphlan4 relative abundance
+dat <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.s",
+                  header=TRUE, row.names=1) %>% 
+        mutate(across(where(is.numeric), round, digits=4)) # round to 4 digits
+# remove GBS from result
+species_to_remove <- "s__Streptococcus_agalactiae"
+dat <- dat[!(row.names(dat) %in% species_to_remove), ]
+# filter out extremely low abundance sample
+dat[dat < 0.1000] <- 0
+dat <- dat[rowSums(dat)>0, ]
+# re-adjust relative abundance to 100 %
+dat <- apply(dat, 2, function(x) x/sum(x)) * 100
+# set upper limit of rel. abund. to 20 %
+dat[dat > 20] <- 20
+
+meta.t <- t(meta) %>% data.frame()
+dat <- rbind(meta.t, dat)
+row_to_remove <- c("Month", "Year", "Market_type", "Sample_ID", "Category", "Sample_type",
+                   "Storage_conditions", "GBS_map_detected", "GBS_map_seqTyped")
+dat <- dat[!row.names(dat) %in% row_to_remove,]
+row.names(dat) <- gsub("s__", "", row.names(dat))
+row.names(dat) <- gsub("_", " ", row.names(dat))
+write.table(dat, '../output_tables/metagenomics.metaphlan4.control.filtered.s.new', 
+            sep='\t', row.names = TRUE, col.names = NA, quote=F)
+
+#run the following command in bash
+#./scripts/run_hclust2.sh
+```
+
+#### Stacked bar chart to identify common microbial species for natural samples
+
+```{r}
+dat.g <- read.table("../output_tables/metagenomics.metaphlan4.control.filtered.g", 
+                  header=TRUE, row.names=1)
+dat.g[dat.g < 0.1] <- 0
+dat.g <- dat.g[rowSums(dat.g)>0, ]
+colnames(dat.g) <- sub("_metagenome", "", colnames(dat.g))
+row.names(dat.g) <- gsub("g__", "", row.names(dat.g))
+dat.g[dat.g < 0.1] <- 0
+dat.g.fil <- dat.g[rowSums(dat.g)>0, ] %>% 
+        apply(., 2, function(x) x/sum(x))*100
+
+df.g <- dat.g.fil %>% 
+        t() %>% 
+        as.data.frame() %>% 
+        rownames_to_column("fraction") %>% 
+        pivot_longer(-fraction, names_to="taxon", values_to="percentage") %>% 
+        mutate(taxon=str_replace(taxon, "^(\\S*)$", "*\\1*")) 
+
+taxon_pool.g <- df.g %>% 
+        group_by(taxon) %>% 
+        summarise(pool=max(percentage)<14, .groups="drop")
+
+inner_join(df.g, taxon_pool.g, by="taxon") %>% 
+        mutate(taxon=if_else(pool, "Other", taxon)) %>% 
+        group_by(fraction, taxon) %>% 
+        summarise(percentage=sum(percentage), .groups="drop") %>% 
+        mutate(fraction=factor(fraction, levels=c("M0004", "M0027", "M0028", "M0029", "M0030",
+                                                  "M0045", "M0046", "M0086", "M0087",
+                                                  "M0024", "M0025", "M0026", "M0084", "M0047",
+                                                  "M0048", "M0049", "M0050", "M0051", "M0052",
+                                                  "M0053", "M0085"))) %>% 
+        ggplot(aes(x=fraction, y=percentage, fill=taxon)) +
+        geom_col() +
+        scale_fill_manual(name="Genus", values=c(brewer.pal(8, "Dark2"), "darkred", "grey")) +
+        theme(legend.text=element_markdown(),
+              axis.text.x=element_text(angle=90, vjust=0.5, hjust=1)) +
+        labs(x="Enrichment fraction", y="Relative abundance (%)")
+ggsave('../output_figures/supfig03_c_illumina_control_taxo_genus_stackedbar.svg', 
+       width =12, height = 8)
+```
+

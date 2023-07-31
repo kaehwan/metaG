@@ -1,31 +1,31 @@
-Month	Year	Sample_ID	Library	Category	Sample_type	Storage_conditions	Market_type	GBS_spike_level	GBS_isolation	GBS_detected	GBS_seqTyped
-October	2022	1948	M0054	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No
-October	2022	1948	M0055	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No
-October	2022	1948	M0056	Fish	Snakehead	Frozen	Supermarket	2-log	No	No	No
-October	2022	1948	M0057	Fish	Snakehead	Frozen	Supermarket	3-log	No	Yes	No
-October	2022	1948	M0058	Fish	Snakehead	Frozen	Supermarket	4-log	No	Yes	Yes
-October	2022	1949	M0059	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No
-October	2022	1949	M0060	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No
-October	2022	1949	M0061	Fish	Snakehead	Chilled	Supermarket	2-log	Yes	Yes	Yes
-October	2022	1949	M0062	Fish	Snakehead	Chilled	Supermarket	3-log	Yes	Yes	Yes
-October	2022	1949	M0063	Fish	Snakehead	Chilled	Supermarket	4-log	Yes	Yes	Yes
-November	2022	1950	M0064	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No
-November	2022	1950	M0065	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No
-November	2022	1950	M0066	Fish	Snakehead	Frozen	Supermarket	2-log	No	Yes	No
-November	2022	1950	M0067	Fish	Snakehead	Frozen	Supermarket	3-log	No	Yes	Yes
-November	2022	1950	M0068	Fish	Snakehead	Frozen	Supermarket	4-log	Yes	Yes	Yes
-November	2022	1963	M0074	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No
-November	2022	1963	M0075	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No
-November	2022	1963	M0076	Fish	Snakehead	Chilled	Supermarket	2-log	No	Yes	Yes
-November	2022	1963	M0077	Fish	Snakehead	Chilled	Supermarket	3-log	Yes	Yes	Yes
-November	2022	1963	M0078	Fish	Snakehead	Chilled	Supermarket	4-log	Yes	Yes	Yes
-December	2022	1973	M0088	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No
-December	2022	1973	M0089	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No
-December	2022	1973	M0090	Fish	Snakehead	Chilled	Supermarket	2-log	No	No	No
-December	2022	1973	M0091	Fish	Snakehead	Chilled	Supermarket	3-log	No	No	No
-December	2022	1973	M0092	Fish	Snakehead	Chilled	Supermarket	4-log	No	Yes	Yes
-December	2022	1974	M0093	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No
-December	2022	1974	M0094	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No
-December	2022	1974	M0095	Fish	Snakehead	Frozen	Supermarket	2-log	No	Yes	No
-December	2022	1974	M0096	Fish	Snakehead	Frozen	Supermarket	3-log	Yes	Yes	Yes
-December	2022	1974	M0097	Fish	Snakehead	Frozen	Supermarket	4-log	Yes	Yes	Yes
+Month	Year	Sample_ID	Library	Category	Sample_type	Storage_conditions	Market_type	GBS_spike_level	GBS_isolation	GBS_map_detected	GBS_map_seqTyped	GBS_map_genome_length	GBS_assembly_detected	GBS_assembly_seqTyped	GBS_assembly_genome_length
+October	2022	S01	M0054	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No	0	No	No	0
+October	2022	S01	M0055	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No	0	No	No	0
+October	2022	S01	M0056	Fish	Snakehead	Frozen	Supermarket	2-log	No	No	No	0	No	No	0
+October	2022	S01	M0057	Fish	Snakehead	Frozen	Supermarket	3-log	No	Yes	No	841136	No	No	0
+October	2022	S01	M0058	Fish	Snakehead	Frozen	Supermarket	4-log	No	Yes	Yes	2037965	Yes	No	1799414
+October	2022	S02	M0059	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No	0	No	No	0
+October	2022	S02	M0060	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No	0	No	No	0
+October	2022	S02	M0061	Fish	Snakehead	Chilled	Supermarket	2-log	Yes	Yes	Yes	2048428	Yes	No	1409362
+October	2022	S02	M0062	Fish	Snakehead	Chilled	Supermarket	3-log	Yes	Yes	Yes	2032487	Yes	Yes	1977523
+October	2022	S02	M0063	Fish	Snakehead	Chilled	Supermarket	4-log	Yes	Yes	Yes	2028932	Yes	Yes	2024504
+November	2022	S03	M0064	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No	0	No	No	0
+November	2022	S03	M0065	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No	0	No	No	0
+November	2022	S03	M0066	Fish	Snakehead	Frozen	Supermarket	2-log	No	Yes	No	346137	No	No	0
+November	2022	S03	M0067	Fish	Snakehead	Frozen	Supermarket	3-log	No	Yes	Yes	2014214	No	No	0
+November	2022	S03	M0068	Fish	Snakehead	Frozen	Supermarket	4-log	Yes	Yes	Yes	2032717	Yes	Yes	1995375
+November	2022	S04	M0074	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No	0	No	No	0
+November	2022	S04	M0075	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No	0	No	No	0
+November	2022	S04	M0076	Fish	Snakehead	Chilled	Supermarket	2-log	No	Yes	Yes	1994879	No	No	0
+November	2022	S04	M0077	Fish	Snakehead	Chilled	Supermarket	3-log	Yes	Yes	Yes	1996915	Yes	Yes	1994039
+November	2022	S04	M0078	Fish	Snakehead	Chilled	Supermarket	4-log	Yes	Yes	Yes	1994420	Yes	Yes	1995521
+December	2022	S05	M0088	Fish	Snakehead	Chilled	Supermarket	Non-spike	No	No	No	0	No	No	0
+December	2022	S05	M0089	Fish	Snakehead	Chilled	Supermarket	1-log	No	No	No	0	No	No	0
+December	2022	S05	M0090	Fish	Snakehead	Chilled	Supermarket	2-log	No	No	No	0	No	No	0
+December	2022	S05	M0091	Fish	Snakehead	Chilled	Supermarket	3-log	No	No	No	0	No	No	0
+December	2022	S05	M0092	Fish	Snakehead	Chilled	Supermarket	4-log	No	Yes	Yes	2089691	Yes	No	1668584
+December	2022	S06	M0093	Fish	Snakehead	Frozen	Supermarket	Non-spike	No	No	No	0	No	No	0
+December	2022	S06	M0094	Fish	Snakehead	Frozen	Supermarket	1-log	No	No	No	0	No	No	0
+December	2022	S06	M0095	Fish	Snakehead	Frozen	Supermarket	2-log	No	Yes	No	1136748	No	No	0
+December	2022	S06	M0096	Fish	Snakehead	Frozen	Supermarket	3-log	Yes	Yes	Yes	2238248	Yes	Yes	1987763
+December	2022	S06	M0097	Fish	Snakehead	Frozen	Supermarket	4-log	Yes	Yes	Yes	2206624	Yes	Yes	2055394
