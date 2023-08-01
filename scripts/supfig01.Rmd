@@ -124,3 +124,8 @@ ggsave('../output_figures/supfig01_d_illumina_spike_assembly_vs_mapping_analysis
 
 ```
 
+#### Session info
+
+```{r}
+sessionInfo()
+```

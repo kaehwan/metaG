@@ -138,3 +138,8 @@ ggsave('../output_figures/supfig03_c_illumina_control_taxo_genus_stackedbar.svg'
        width =12, height = 8)
 ```
 
+#### Session info
+
+```{r}
+sessionInfo()
+```

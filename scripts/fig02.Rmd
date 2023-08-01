@@ -169,7 +169,7 @@ dat %>%
         mutate(`GBS_abundance`=if_else(`GBS_abundance`==0,
                                        `GBS_abundance`+0.01,
                                        `GBS_abundance`)) %>%
-        ggplot(aes(x=`Genome_length`/2.21e6*100, y=`GBS_abundance`)) + 
+        ggplot(aes(x=`GBS_map_genome_length`/2.21e6*100, y=`GBS_abundance`)) + 
         geom_jitter(aes(color=`Enrichment`), stroke=1, size=12, width=1.5, height=0.2) + 
         scale_y_log10(breaks=c(0,0.01,0.1,1,10,100), labels=c(0,0.01,0.1,1,10,100)) +
         scale_color_manual(name="Metagenomics<br>Analysis", 
@@ -183,7 +183,7 @@ ggsave('../output_figures/fig02_e_illumina_pilot_assembly_qc.svg',
 
 ```
 
-####
+#### Session info
 
 ```{r}
 sessionInfo()

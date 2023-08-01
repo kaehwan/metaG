@@ -283,3 +283,8 @@ vcf %>%
 ggsave('../output_figures/fig03_e_illumina_control_snp_qc.svg', width=8, height=8)
 ```
 
+#### Session info
+
+```{r}
+sessionInfo()
+```
