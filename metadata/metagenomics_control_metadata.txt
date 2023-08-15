@@ -14,7 +14,7 @@ August	2022	M0085	M0085	Fish	Snakehead	On ice	Wet market	No	No	No
 September	2021	M0004	M0004	Fish	Tilapia	Frozen	Supermarket	Yes	Yes	Yes
 June	2022	M0027	M0027	Fish	Snakehead	Frozen	Supermarket	Yes	Yes	Yes
 June	2022	M0028	M0028	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes
-June	2022	M0029	M0029	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes
+June	2022	M0029	M0029	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	No
 June	2022	M0030	M0030	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	No
 July	2022	M0045	M0045	Fish	Tilapia	Live	Supermarket	Yes	Yes	Yes
 July	2022	M0046	M0046	Fish	Tilapia	Chilled	Supermarket	Yes	Yes	Yes

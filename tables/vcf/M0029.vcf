@@ -1,10 +1,10 @@
 ##fileformat=VCFv4.2
 ##bcftoolsVersion=1.17+htslib-1.17
-##bcftoolsCommand=mpileup --max-depth 400 -Ob -a AD,ADF,ADR,DP,SP,INFO/ADF,INFO/ADR -f /mnt/ab2/common/illumina/pilot/ref/sequence.fasta /mnt/ab2/common/illumina/metaG_natural/align2ref/M0029.bam
-##reference=file:///mnt/ab2/common/illumina/pilot/ref/sequence.fasta
+##bcftoolsCommand=mpileup --max-depth 400 -Ob -a AD,ADF,ADR,DP,SP,INFO/ADF,INFO/ADR -f /mnt/ab2/common/illumina/metaG_nature/pilot/ref/sequence.fasta /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0029.bam
+##reference=file:///mnt/ab2/common/illumina/metaG_nature/pilot/ref/sequence.fasta
 ##bcftools_callVersion=1.17+htslib-1.17
-##bcftools_callCommand=call -A -mv -Ov; Date=Mon Jul 24 08:48:12 2023
-##CL=vcffilter -q 30 -d 10 --snps-only -i /mnt/ab2/common/illumina/metaG_natural/align2ref/M0029.tmp.vcf.gz -o /mnt/ab2/common/illumina/metaG_natural/align2ref/M0029.vcf.gz
+##bcftools_callCommand=call -A -mv -Ov; Date=Mon Aug 14 22:06:06 2023
+##CL=vcffilter -q 30 -d 10 --snps-only -i /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0029.tmp.vcf.gz -o /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0029.vcf.gz
 ##contig=<ID=CP012419.2,length=2116811>
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
 ##FILTER=<ID=PASS,Description="All filters passed">
@@ -33,7 +33,7 @@
 ##FORMAT=<ID=ADF,Number=R,Type=Integer,Description="Allelic depths on the forward strand (high-quality bases)">
 ##FORMAT=<ID=ADR,Number=R,Type=Integer,Description="Allelic depths on the reverse strand (high-quality bases)">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	/mnt/ab2/common/illumina/metaG_natural/align2ref/M0029.bam
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	/mnt/ab2/common/illumina/metaG_nature/align2ref2/M0029.bam
 CP012419.2	2888	.	A	G	67.3534	.	DP=122;ADF=45,8;ADR=37,29;VDB=0.219928;SGB=-0.693141;RPBZ=0.0602913;MQBZ=3.88764;MQSBZ=9.65697;BQBZ=-0.305564;SCBZ=0;MQ0F=0.467213;AC=1;AN=2;DP4=45,37,8,29;MQ=18	GT:PL:DP:SP:ADF:ADR:AD	0/1:100,0,107:119:31:45,8:37,29:82,37
 CP012419.2	20789	.	T	C	222.404	.	DP=100;ADF=29,18;ADR=21,31;VDB=0.0895669;SGB=-0.693147;RPBZ=-1.51911;MQBZ=0;MQSBZ=0;BQBZ=-1.35583;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=29,21,18,31;MQ=60	GT:PL:DP:SP:ADF:ADR:AD	0/1:255,0,255:99:14:29,18:21,31:50,49
 CP012419.2	21081	.	A	G	222.406	.	DP=100;ADF=30,25;ADR=19,24;VDB=0.133076;SGB=-0.693147;RPBZ=1.35391;MQBZ=0;MQSBZ=0;BQBZ=0.390186;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=30,19,25,24;MQ=60	GT:PL:DP:SP:ADF:ADR:AD	0/1:255,0,255:98:4:30,25:19,24:49,49

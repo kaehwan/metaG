@@ -23,9 +23,9 @@ path <- "/Users/simkaehwan/Documents/Bioinfo/metaG/tables/vcf/"
 
 vcf <- paste0(path, list.files(path, pattern=".vcf")) %>% 
   map_df(~fread(., skip="#CHROM", data.table=F)) %>% 
-  pivot_longer(cols=starts_with("/mnt/ab2/common/illumina/metaG_natural/align2ref/"), 
+  pivot_longer(cols=starts_with("/mnt/ab2/common/illumina/metaG_nature/align2ref2/"), 
                names_to="Sample", 
-               names_prefix="/mnt/ab2/common/illumina/metaG_natural/align2ref/", 
+               names_prefix="/mnt/ab2/common/illumina/metaG_nature/align2ref2/", 
                values_to="Record", 
                values_drop_na=TRUE) %>% 
   rename(CHROM="#CHROM") %>% 
@@ -37,7 +37,7 @@ vcf <- paste0(path, list.files(path, pattern=".vcf")) %>%
          ALT1_count=coalesce(as.numeric(ALT1_count), 0),
          ALT2_count=coalesce(as.numeric(ALT2_count), 0),
          ALT3_count=coalesce(as.numeric(ALT3_count), 0),
-         AAF=(ALT1_count)/as.numeric(DP)) %>% 
+         AAF=(ALT1_count+ALT2_count+ALT3_count)/as.numeric(DP)) %>% 
   mutate(Ref="RefDB")
 
 
@@ -54,4 +54,5 @@ ggsave('../output_figures/supfig02_illumina_control_snp_qc.svg', width=12, heigh
 ```{r}
 sessionInfo()
 ```
+
 

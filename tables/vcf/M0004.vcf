@@ -1,10 +1,10 @@
 ##fileformat=VCFv4.2
 ##bcftoolsVersion=1.17+htslib-1.17
-##bcftoolsCommand=mpileup --max-depth 400 -Ob -a AD,ADF,ADR,DP,SP,INFO/ADF,INFO/ADR -f /mnt/ab2/common/illumina/metaG_natural/ref/NZ_CP012480.1.fasta /mnt/ab2/common/illumina/metaG_natural/align2ref/M0004.bam
-##reference=file:///mnt/ab2/common/illumina/metaG_natural/ref/NZ_CP012480.1.fasta
+##bcftoolsCommand=mpileup --max-depth 400 -Ob -a AD,ADF,ADR,DP,SP,INFO/ADF,INFO/ADR -f /mnt/ab2/common/illumina/metaG_nature/ref/NZ_CP012480.1.fasta /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0004.bam
+##reference=file:///mnt/ab2/common/illumina/metaG_nature/ref/NZ_CP012480.1.fasta
 ##bcftools_callVersion=1.17+htslib-1.17
-##bcftools_callCommand=call -A -mv -Ov; Date=Sun Jul 23 14:37:28 2023
-##CL=vcffilter -q 30 -d 10 --snps-only -i /mnt/ab2/common/illumina/metaG_natural/align2ref/M0004.tmp.vcf.gz -o /mnt/ab2/common/illumina/metaG_natural/align2ref/M0004.vcf.gz
+##bcftools_callCommand=call -A -mv -Ov; Date=Mon Aug 14 22:39:12 2023
+##CL=vcffilter -q 30 -d 10 --snps-only -i /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0004.tmp.vcf.gz -o /mnt/ab2/common/illumina/metaG_nature/align2ref2/M0004.vcf.gz
 ##contig=<ID=NZ_CP012480.1,length=2074179>
 ##ALT=<ID=*,Description="Represents allele(s) other than observed.">
 ##FILTER=<ID=PASS,Description="All filters passed">
@@ -33,7 +33,7 @@
 ##FORMAT=<ID=ADF,Number=R,Type=Integer,Description="Allelic depths on the forward strand (high-quality bases)">
 ##FORMAT=<ID=ADR,Number=R,Type=Integer,Description="Allelic depths on the reverse strand (high-quality bases)">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	/mnt/ab2/common/illumina/metaG_natural/align2ref/M0004.bam
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	/mnt/ab2/common/illumina/metaG_nature/align2ref2/M0004.bam
 NZ_CP012480.1	85	.	A	T	225.417	.	DP=84;ADF=0,61;ADR=0,9;VDB=0.322876;SGB=-0.693147;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,61,9;MQ=60	GT:PL:DP:SP:ADF:ADR:AD	1/1:255,211,0:70:0:0,61:0,9:0,70
 NZ_CP012480.1	510	.	C	T	225.417	.	DP=59;ADF=0,47;ADR=0,12;VDB=0.835583;SGB=-0.693147;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,47,12;MQ=60	GT:PL:DP:SP:ADF:ADR:AD	1/1:255,178,0:59:0:0,47:0,12:0,59
 NZ_CP012480.1	1272	.	C	T	225.417	.	DP=106;ADF=0,37;ADR=0,60;VDB=0.546276;SGB=-0.693147;MQSBZ=0;MQ0F=0;AC=2;AN=2;DP4=0,0,37,60;MQ=60	GT:PL:DP:SP:ADF:ADR:AD	1/1:255,255,0:97:0:0,37:0,60:0,97
