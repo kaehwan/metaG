@@ -14,23 +14,24 @@ To start the pipeline, use the following command:
 nextflow run main.nf -profile docker
 ```
 
+
 The essential parameters to be set include:
 
---input
+**--input "/path/to/sampleList.csv"**
 - Specify the directory of fastq.gz file(s) in CSV file format.
 - CSV headers for Illumina reads: "sample_id,short_read_1,short_read_2",
 - CSV headers for Nanopore reads: "sample_id,long_read".
 
---outdir
+**--outdir "/path/to/output/folder"**
 - Specify the output directory. [Default: "./results/"]
 
---mode
+**--mode "mapping"**
 - Specify the analysis mode: mapping, assembly, nanopore. [Default: "mapping"]
 
---metaphlan4_db
+**--metaphlan4_db "/path/to/metaphlan_db"**
 - Specify the location of unarchived MetaPhlAn4 database.
 
---kraken2_db
+**--kraken2_db "/path/to/kraken2_db/"**
 - Specify the location of unarchived Kraken2 database.
 
 ## Publication
