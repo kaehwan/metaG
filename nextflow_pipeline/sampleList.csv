@@ -1,0 +1,3 @@
+sample_id,short_read_1,short_read_2
+sample_A,./data/sample_A_1.fastq.gz,./data/sample_A_2.fastq.gz
+sample_B,./data/sample_B_1.fastq.gz,./data/sample_B_2.fastq.gz
