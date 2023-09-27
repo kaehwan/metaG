@@ -16,22 +16,22 @@ nextflow run main.nf -profile docker
 
 The essential parameters to be set include:
 --input
-Specify the directory of fastq.gz file(s) in CSV file format.
-CSV headers for Illumina reads: "sample_id,short_read_1,short_read_2",
-CSV headers for Nanopore reads: "sample_id,long_read".
+- Specify the directory of fastq.gz file(s) in CSV file format.
+- CSV headers for Illumina reads: "sample_id,short_read_1,short_read_2",
+- CSV headers for Nanopore reads: "sample_id,long_read".
 
 --outdir
-Specify the output directory. [Default: "./results/"]
+- Specify the output directory. [Default: "./results/"]
 
 --mode
-Specify the analysis mode: mapping, assembly, nanopore. [Default: "mapping"]
+- Specify the analysis mode: mapping, assembly, nanopore. [Default: "mapping"]
 
---metaphlan4_db     
-Specify the location of unarchived MetaPhlAn4 database.
+--metaphlan4_db
+- Specify the location of unarchived MetaPhlAn4 database.
 
 --kraken2_db
-Specify the location of unarchived Kraken2 database.
+- Specify the location of unarchived Kraken2 database.
 
 ## Publication
 For additional implementation details and guidance on using this pipeline, users can also refer to:
-- K. H. Sim, et. al. A metagenomics-based workflow for detection and genomic characterization of GBS in raw freshwater fish.
+- K. H. Sim, *et. al.*. **A metagenomics-based workflow for detection and genomic characterization of GBS in raw freshwater fish**.
