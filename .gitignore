@@ -7,3 +7,6 @@ renv/
 .Rprofile
 renv.lock
 metaG.Rproj
+nextflow_pipeline/data/
+nextflow_pipeline/docker/
+nextflow_pipeline/ref/gbs_genomes.fasta
