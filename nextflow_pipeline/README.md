@@ -15,6 +15,7 @@ nextflow run main.nf -profile docker
 ```
 
 The essential parameters to be set include:
+
 --input
 - Specify the directory of fastq.gz file(s) in CSV file format.
 - CSV headers for Illumina reads: "sample_id,short_read_1,short_read_2",
