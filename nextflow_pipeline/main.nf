@@ -75,7 +75,7 @@ include { SAMTOOLS_FAIDX as SAMTOOLS_FAIDX_GBS; SAMTOOLS_FAIDX as SAMTOOLS_FAIDX
 include { BWA_MEM; BWA_SNP_ALIGN; BCFTOOLS_MPILEUP; MINIMAP2_NANOPORE               } from './modules/map_reads'
 include { SPADES; METAWRAP; FLYE; MEDAKA                                            } from './modules/assembly'
 include { QUAST; QUAST_NANOPORE                                                     } from './modules/qc_assembly'
-include { MLST                                                                      } from './modules/typing'
+include { MLST; VF_AMR                                                              } from './modules/typing'
 include { METAPHLAN4; KRAKEN2; GTDB_PREP; GTDBTK                                    } from './modules/assign_taxo'
 
 /*
@@ -106,8 +106,9 @@ workflow {
         SPADES( BWA_MEM.out.reads )
         // QC ASSEMBLY
         QUAST( BWA_MEM.out.reads, SPADES.out.assembly )
-        // GBS SEQUENCE TYPING
+        // GBS SEQUENCE TYPE, VF AND AMR TYPING
         MLST( SPADES.out.assembly )
+        VF_AMR( SPADES.out.assembly )
         // TAXONOMICAL ASSIGNMENT
         METAPHLAN4( FASTP.out.reads, ch_metaphlan4_db )
         GTDBTK( SPADES.out.assembly, GTDB_PREP.out )
@@ -128,8 +129,9 @@ workflow {
         METAWRAP( FASTP.out.reads )
         // TAXONOMICAL ASSIGNMENT
         GTDBTK( METAWRAP.out.mag, GTDB_PREP.out )
-        // GBS SEQUENCE TYPING
+        // GBS SEQUENCE TYPE, VF AND AMR TYPING
         MLST( METAWRAP.out.mag )
+        VF_AMR( METAWRAP.out.mag )
 
     } else if ( params.mode == "nanopore" ) {
 
@@ -145,8 +147,9 @@ workflow {
         QUAST_NANOPORE( MINIMAP2_NANOPORE.out.reads, MEDAKA.out.assembly )
         // TAXONOMICAL ASSIGNMENT
         GTDBTK( MEDAKA.out.assembly, GTDB_PREP.out)
-        // GBS SEQUENCE TYPING
+        // GBS SEQUENCE TYPE, VF AND AMR TYPING
         MLST( MEDAKA.out.assembly )
+        VF_AMR( MEDAKA.out.assembly )
     }
 }
 
